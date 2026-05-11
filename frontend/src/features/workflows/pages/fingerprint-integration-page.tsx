@@ -29,6 +29,9 @@ import {
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { useToast } from '@/components/ui/toast'
 
 type LegacyDevice = {
@@ -50,6 +53,16 @@ type PushPayload = {
   timestamp: string
   status: string
 }
+
+
+const fingerprintSchema = z.object({
+  device_finger_print: z.string().min(1, 'رقم الجهاز مطلوب'),
+  user_id: z.string().min(1, 'رقم البصمة مطلوب'),
+  timestamp: z.string().min(1, 'الوقت والتاريخ مطلوب'),
+  status: z.string().min(1, 'الحالة مطلوبة'),
+});
+
+type FingerprintFormValues = z.infer<typeof fingerprintSchema>;
 
 const punchStatusOptions = [
   { label: 'دخول', value: 'in' },
@@ -87,11 +100,23 @@ export function FingerprintIntegrationPage() {
   const { notify } = useToast()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [lastSubmitted, setLastSubmitted] = useState<PushPayload | null>(null)
-  const [form, setForm] = useState({
-    device_finger_print: '',
-    user_id: '',
-    timestamp: currentDatetimeValue(),
-    status: 'in',
+  const {
+    control,
+    register,
+    handleSubmit,
+  } = useForm<FingerprintFormValues>({
+    resolver: zodResolver(fingerprintSchema),
+    defaultValues: {
+      device_finger_print: '',
+      user_id: '',
+      timestamp: currentDatetimeValue(),
+      status: 'in',
+    }
+  })
+
+  const [formDevice, formUserId, formStatus, formTimestamp] = useWatch({
+    control,
+    name: ['device_finger_print', 'user_id', 'status', 'timestamp'],
   })
 
   const devicesQuery = useQuery({
@@ -131,9 +156,9 @@ export function FingerprintIntegrationPage() {
   const selectedDevice = useMemo(
     () =>
       devicesQuery.data?.find(
-        (device) => String(device.id) === String(form.device_finger_print),
+        (device) => String(device.id) === String(formDevice),
       ),
-    [devicesQuery.data, form.device_finger_print],
+    [devicesQuery.data, formDevice],
   )
 
   const pushMutation = useMutation({
@@ -160,16 +185,15 @@ export function FingerprintIntegrationPage() {
   })
 
   const buildPayload = (): PushPayload => ({
-      device_finger_print: Number(form.device_finger_print),
-      user_id: Number(form.user_id),
-      timestamp: toApiTimestamp(form.timestamp),
-      status: form.status,
+      device_finger_print: Number(formDevice),
+      user_id: Number(formUserId),
+      timestamp: toApiTimestamp(formTimestamp),
+      status: formStatus,
   })
 
-  const submitPush = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const submitPush = handleSubmit(() => {
     setConfirmOpen(true)
-  }
+  })
 
   return (
     <div className="space-y-6">
@@ -377,14 +401,8 @@ export function FingerprintIntegrationPage() {
                   <p className="font-semibold">اختر الجهاز</p>
                 </div>
                 <Select
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      device_finger_print: event.target.value,
-                    }))
-                  }
+                  {...register('device_finger_print')}
                   required
-                  value={form.device_finger_print}
                 >
                   <option value="">اختر جهازاً...</option>
                   {devicesQuery.data?.map((device) => (
@@ -407,23 +425,17 @@ export function FingerprintIntegrationPage() {
                     <span>رقم البصمة</span>
                     <Input
                       min={1}
-                      onChange={(event) =>
-                        setForm((current) => ({ ...current, user_id: event.target.value }))
-                      }
+                      {...register('user_id')}
                       required
                       type="number"
-                      value={form.user_id}
                     />
                   </label>
 
                   <label className="space-y-2 text-sm font-medium">
                     <span>الحالة</span>
                     <Select
-                      onChange={(event) =>
-                        setForm((current) => ({ ...current, status: event.target.value }))
-                      }
+                      {...register('status')}
                       required
-                      value={form.status}
                     >
                       {punchStatusOptions.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -436,12 +448,9 @@ export function FingerprintIntegrationPage() {
                   <label className="space-y-2 text-sm font-medium sm:col-span-2">
                     <span>الوقت والتاريخ</span>
                     <Input
-                      onChange={(event) =>
-                        setForm((current) => ({ ...current, timestamp: event.target.value }))
-                      }
+                      {...register('timestamp')}
                       required
                       type="datetime-local"
-                      value={form.timestamp}
                     />
                   </label>
                 </div>
@@ -464,13 +473,13 @@ export function FingerprintIntegrationPage() {
                   <div className="flex justify-between gap-3">
                     <span>رقم البصمة</span>
                     <span className="font-medium text-on-surface">
-                      {form.user_id || '-'}
+                      {formUserId || '-'}
                     </span>
                   </div>
                   <div className="flex justify-between gap-3">
                     <span>الحالة</span>
                     <span className="font-medium text-on-surface">
-                      {getStatusLabel(form.status)}
+                      {getStatusLabel(formStatus)}
                     </span>
                   </div>
                 </div>

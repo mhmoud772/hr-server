@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { CalendarCheck, UserRoundX, Users } from 'lucide-react'
 
+import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -112,7 +113,18 @@ export function AttendanceWorkdayPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant bg-card">
-                  {records.map((record) => (
+                  {query.isLoading ? (
+                    Array.from({ length: 5 }).map((_, i) => (
+                      <tr key={i}>
+                        <td className="px-4 py-3"><Skeleton className="h-5 w-32" /></td>
+                        <td className="px-4 py-3"><Skeleton className="h-5 w-24" /></td>
+                        <td className="px-4 py-3"><Skeleton className="h-5 w-16" /></td>
+                        <td className="px-4 py-3"><Skeleton className="h-5 w-16" /></td>
+                        <td className="px-4 py-3"><Skeleton className="h-6 w-20 rounded-full" /></td>
+                      </tr>
+                    ))
+                  ) : (
+                    records.map((record) => (
                     <tr key={String(record.id)}>
                       <td className="px-4 py-3 font-medium">
                         {String(record.employee_name ?? '-')}
@@ -132,7 +144,7 @@ export function AttendanceWorkdayPage() {
                         </Badge>
                       </td>
                     </tr>
-                  ))}
+                  )))}
                 </tbody>
               </table>
             </div>

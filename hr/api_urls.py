@@ -17,7 +17,10 @@ from .api_views import (
     ShiftViewSet,
     TypeOfEmployeeViewSet,
     UserViewSet,
+    GroupViewSet,
     change_password,
+    system_status,
+    global_search,
 )
 
 router = DefaultRouter()
@@ -36,8 +39,11 @@ router.register('shifts', ShiftViewSet)
 router.register('attendance', AttendanceViewSet)
 router.register('fingerprint-laws', LawFingerPrinterViewSet)
 router.register('users', UserViewSet)
+router.register('groups', GroupViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
     path('change-password/', change_password, name='change_password'),
+    path('system-status/', system_status, name='system_status'),
+    path('global-search/', global_search, name='global_search'),
 ]

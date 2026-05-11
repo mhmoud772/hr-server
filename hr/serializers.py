@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 from .models import (
     Attendance,
@@ -212,8 +213,16 @@ class UserSerializer(serializers.ModelSerializer):
         for field, value in validated_data.items():
             setattr(instance, field, value)
 
-        if password:
-            instance.set_password(password)
-
         instance.save()
         return instance
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'display')
+
+    def get_display(self, obj):
+        return obj.name

@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
-import type React from 'react'
 import { useQueries } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -61,41 +63,6 @@ function getInitialValue(field: ResourceField, record: ResourceRecord | null) {
   return value === undefined || value === null ? '' : String(value)
 }
 
-function normalizeValue(field: ResourceField, formData: FormData) {
-  if (field.type === 'checkbox') {
-    return formData.get(field.key) === 'on'
-  }
-
-  if (field.type === 'multiselect') {
-    return formData.getAll(field.key).map((value) => Number(value))
-  }
-
-  const rawValue = formData.get(field.key)
-
-  if (rawValue === null || rawValue === '') {
-    return null
-  }
-
-  if (field.type === 'select') {
-    const matchingOption = field.options?.find(
-      (option) => String(option.value) === String(rawValue),
-    )
-
-    if (matchingOption && typeof matchingOption.value === 'string') {
-      return String(rawValue)
-    }
-
-    const maybeNumber = Number(rawValue)
-    return Number.isNaN(maybeNumber) ? String(rawValue) : maybeNumber
-  }
-
-  if (field.type === 'number' || field.type === 'decimal') {
-    const maybeNumber = Number(rawValue)
-    return Number.isNaN(maybeNumber) ? String(rawValue) : maybeNumber
-  }
-
-  return String(rawValue)
-}
 
 function fieldGroupTitle(index: number) {
   if (index === 0) return 'البيانات الأساسية'
@@ -162,26 +129,84 @@ export function ResourceForm({
     return [primary, relations, details].filter((fields) => fields.length)
   }, [resource.formFields])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const schema = useMemo(() => {
+    const shape: Record<string, z.ZodTypeAny> = {}
+    resource.formFields.forEach((field) => {
+      let validator: z.ZodTypeAny
 
-    const formData = new FormData(event.currentTarget)
+      if (field.type === 'checkbox') {
+        validator = z.boolean().default(false)
+      } else if (field.type === 'multiselect') {
+        validator = z.array(z.string())
+      } else {
+        validator = z.string()
+      }
+
+      if (field.required) {
+        if (field.type === 'checkbox') {
+           validator = validator.refine((val: unknown) => val === true, { message: 'يجب تأكيد هذا الحقل' })
+        } else if (field.type === 'multiselect') {
+           validator = (validator as z.ZodArray<z.ZodTypeAny>).min(1, 'يجب اختيار عنصر واحد على الأقل')
+        } else if (field.type === 'password' && editingRecord) {
+           validator = validator.optional().nullable()
+        } else {
+           validator = (validator as z.ZodString).min(1, 'هذا الحقل مطلوب')
+        }
+      } else {
+        if (validator instanceof z.ZodString) {
+          validator = validator.optional().or(z.literal(''))
+        } else {
+          validator = validator.optional().nullable()
+        }
+      }
+
+      shape[field.key] = validator
+    })
+    return z.object(shape)
+  }, [resource.formFields, editingRecord])
+
+  const defaultValues = useMemo(() => {
+    const values: Record<string, unknown> = {}
+    resource.formFields.forEach(field => {
+      values[field.key] = getInitialValue(field, editingRecord)
+    })
+    return values
+  }, [resource.formFields, editingRecord])
+
+  const {
+    register,
+    handleSubmit: hookFormSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues,
+  })
+
+  const handleSubmit = hookFormSubmit((data) => {
     const payload = resource.formFields.reduce<Record<string, unknown>>(
       (acc, field) => {
-        const value = normalizeValue(field, formData)
+        let value = data[field.key]
 
         if (field.type === 'password' && editingRecord && !value) {
           return acc
         }
 
+        if (field.type === 'multiselect') {
+          value = Array.isArray(value) ? value.map(Number) : []
+        } else if (value === '' || value === undefined || value === null) {
+          value = null
+        } else if (field.type === 'select' || field.type === 'number' || field.type === 'decimal') {
+          const num = Number(value)
+          if (!Number.isNaN(num)) value = num
+        }
+
         acc[field.key] = value
         return acc
       },
-      {},
+      {}
     )
-
     onSubmit(payload)
-  }
+  })
 
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>
@@ -207,7 +232,6 @@ export function ResourceForm({
 
           <div className="grid gap-4 md:grid-cols-2">
             {fields.map((field) => {
-              const initialValue = getInitialValue(field, editingRecord)
               const options =
                 field.options ?? relationOptions[field.relation ?? ''] ?? []
               const isWide = field.type === 'textarea' || field.type === 'multiselect'
@@ -231,18 +255,14 @@ export function ResourceForm({
 
                   {field.type === 'textarea' && (
                     <Textarea
-                      defaultValue={String(initialValue)}
-                      name={field.key}
+                      {...register(field.key)}
                       placeholder={field.placeholder}
-                      required={field.required}
                     />
                   )}
 
                   {field.type === 'select' && (
                     <Select
-                      defaultValue={String(initialValue)}
-                      name={field.key}
-                      required={field.required}
+                      {...register(field.key)}
                     >
                       <option value="">اختر...</option>
                       {options.map((option) => (
@@ -255,10 +275,8 @@ export function ResourceForm({
 
                   {field.type === 'multiselect' && (
                     <Select
-                      defaultValue={initialValue as string[]}
+                      {...register(field.key)}
                       multiple
-                      name={field.key}
-                      required={field.required}
                       size={Math.min(Math.max(options.length, 3), 6)}
                     >
                       {options.map((option) => (
@@ -273,8 +291,7 @@ export function ResourceForm({
                     <div className="flex h-10 items-center gap-2 rounded-md border border-input bg-background px-3">
                       <input
                         className="h-4 w-4 accent-primary"
-                        defaultChecked={Boolean(initialValue)}
-                        name={field.key}
+                        {...register(field.key)}
                         type="checkbox"
                       />
                       <span className="text-on-surface-variant">نعم</span>
@@ -285,12 +302,16 @@ export function ResourceForm({
                     field.type,
                   ) && (
                     <Input
-                      defaultValue={String(initialValue)}
-                      name={field.key}
+                      {...register(field.key)}
                       placeholder={field.placeholder}
-                      required={field.required}
                       type={field.type}
                     />
+                  )}
+
+                  {errors[field.key] && (
+                    <span className="text-xs text-destructive">
+                      {errors[field.key]?.message as string}
+                    </span>
                   )}
                 </label>
               )

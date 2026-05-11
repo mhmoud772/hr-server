@@ -2,6 +2,7 @@ import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/rea
 import { Check, X } from 'lucide-react'
 import { useState } from 'react'
 
+import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -139,8 +140,20 @@ export function LeaveApprovalsPage() {
           </div>
 
           {query.isLoading && (
-            <div className="py-12 text-center text-on-surface-variant">
-              جار تحميل الطلبات...
+            <div className="grid gap-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex flex-col justify-between gap-3 rounded-md border border-outline-variant bg-card p-4 md:flex-row md:items-center">
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-40" />
+                    <Skeleton className="h-4 w-60" />
+                  </div>
+                  <div className="flex gap-2">
+                    <Skeleton className="h-8 w-16" />
+                    <Skeleton className="h-8 w-20" />
+                    <Skeleton className="h-8 w-20" />
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 

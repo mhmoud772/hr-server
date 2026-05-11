@@ -13,9 +13,7 @@ import {
   KeyRound,
   Scale,
   ShieldCheck,
-  SquareUserRound,
   Timer,
-  UserCheck,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -53,17 +51,17 @@ export type ResourceConfig = {
   description: string
   endpoint: string
   path: string
-  group: 'hr' | 'attendance' | 'leaves' | 'settings'
+  group: 'operations' | 'companySetup' | 'timeSetup' | 'system'
   icon: LucideIcon
   columns: ResourceColumn[]
   formFields: ResourceField[]
 }
 
 export const resourceGroups = {
-  hr: 'الموارد البشرية',
-  attendance: 'الحضور والبصمة',
-  leaves: 'الإجازات',
-  settings: 'الإعدادات المرجعية',
+  operations: 'العمليات اليومية',
+  companySetup: 'إعدادات المنشأة',
+  timeSetup: 'الدوام والإجازات',
+  system: 'النظام والأجهزة',
 } as const
 
 export const resourceGroupMeta: Record<
@@ -74,27 +72,28 @@ export const resourceGroupMeta: Record<
     path: string
   }
 > = {
-  hr: {
-    description: 'الموظفون، الوظائف، والهيكل الإداري.',
-    icon: Users,
-    path: '/groups/hr',
+  operations: {
+    description: 'الموظفون، الحضور، الإجازات والأرصدة.',
+    icon: BriefcaseBusiness,
+    path: '/groups/operations',
   },
-  attendance: {
-    description: 'الحضور، البصمة، الشفتات، وقوانين الدوام.',
-    icon: Fingerprint,
-    path: '/groups/attendance',
-  },
-  leaves: {
-    description: 'طلبات الإجازات، الأرصدة، الأنواع، والقوانين.',
-    icon: CalendarDays,
-    path: '/groups/leaves',
-  },
-  settings: {
-    description: 'القيم المرجعية مثل المسميات والمستويات والأيام.',
+  companySetup: {
+    description: 'الهيكل الإداري، الوظائف وأنواع التوظيف.',
     icon: Building2,
-    path: '/groups/settings',
+    path: '/groups/companySetup',
+  },
+  timeSetup: {
+    description: 'فترات الدوام، قوانين الإجازات، والأيام.',
+    icon: CalendarClock,
+    path: '/groups/timeSetup',
+  },
+  system: {
+    description: 'أجهزة البصمة، المستخدمون والصلاحيات.',
+    icon: ShieldCheck,
+    path: '/groups/system',
   },
 }
+
 
 export const resources: ResourceConfig[] = [
   {
@@ -103,7 +102,7 @@ export const resources: ResourceConfig[] = [
     description: 'قائمة الموظفين الأساسية وبياناتهم الوظيفية.',
     endpoint: '/employees/',
     path: '/resources/employees',
-    group: 'hr',
+    group: 'operations',
     icon: Users,
     columns: [
       { key: 'name', label: 'الاسم' },
@@ -154,7 +153,7 @@ export const resources: ResourceConfig[] = [
     description: 'ربط الموظفين بالإدارات والمسميات الوظيفية.',
     endpoint: '/jobs/',
     path: '/resources/jobs',
-    group: 'hr',
+    group: 'companySetup',
     icon: BriefcaseBusiness,
     columns: [
       { key: 'employee_name', label: 'الموظف' },
@@ -180,7 +179,7 @@ export const resources: ResourceConfig[] = [
     description: 'الإدارات والوحدات التنظيمية الهرمية.',
     endpoint: '/organizational-structures/',
     path: '/resources/organizational-structures',
-    group: 'hr',
+    group: 'companySetup',
     icon: Network,
     columns: [
       { key: 'name', label: 'الاسم' },
@@ -199,7 +198,7 @@ export const resources: ResourceConfig[] = [
     description: 'سجلات الحضور والانصراف وحالات الدوام.',
     endpoint: '/attendance/',
     path: '/resources/attendance',
-    group: 'attendance',
+    group: 'operations',
     icon: CalendarCheck,
     columns: [
       { key: 'employee_name', label: 'الموظف' },
@@ -239,7 +238,7 @@ export const resources: ResourceConfig[] = [
     description: 'البيانات المستقبلة من أجهزة البصمة.',
     endpoint: '/fingerprint-logs/',
     path: '/resources/fingerprint-logs',
-    group: 'attendance',
+    group: 'system',
     icon: Fingerprint,
     columns: [
       { key: 'employee_name', label: 'الموظف' },
@@ -267,7 +266,7 @@ export const resources: ResourceConfig[] = [
     description: 'تعريف أجهزة البصمة ومواقعها وحالة تفعيلها.',
     endpoint: '/fingerprint-devices/',
     path: '/resources/fingerprint-devices',
-    group: 'attendance',
+    group: 'system',
     icon: ShieldCheck,
     columns: [
       { key: 'name', label: 'الجهاز' },
@@ -285,38 +284,14 @@ export const resources: ResourceConfig[] = [
       { key: 'password', label: 'كلمة السر', type: 'text' },
     ],
   },
-  {
-    key: 'employee-fingerprints',
-    title: 'بصمات الموظفين',
-    description: 'ربط أرقام البصمة بالموظفين والأجهزة.',
-    endpoint: '/employee-fingerprints/',
-    path: '/resources/employee-fingerprints',
-    group: 'attendance',
-    icon: SquareUserRound,
-    columns: [
-      { key: 'employee_name', label: 'الموظف' },
-      { key: 'device_name', label: 'الجهاز' },
-      { key: 'id_users', label: 'رقم المستخدم' },
-    ],
-    formFields: [
-      { key: 'employee', label: 'الموظف', type: 'select', relation: 'employees', required: true },
-      {
-        key: 'device_figer_print',
-        label: 'جهاز البصمة',
-        type: 'select',
-        relation: 'fingerprint-devices',
-        required: true,
-      },
-      { key: 'id_users', label: 'رقم المستخدم في البصمة', type: 'number', required: true },
-    ],
-  },
+
   {
     key: 'shifts',
     title: 'فترات الدوام',
     description: 'تعريف الشفتات والأيام والموظفين المرتبطين بها.',
     endpoint: '/shifts/',
     path: '/resources/shifts',
-    group: 'attendance',
+    group: 'timeSetup',
     icon: Timer,
     columns: [
       { key: 'name', label: 'الفترة' },
@@ -339,7 +314,7 @@ export const resources: ResourceConfig[] = [
     description: 'قواعد السماح والتأخير ونسيان البصمات.',
     endpoint: '/fingerprint-laws/',
     path: '/resources/fingerprint-laws',
-    group: 'attendance',
+    group: 'timeSetup',
     icon: Scale,
     columns: [
       { key: 'name', label: 'القانون' },
@@ -391,7 +366,7 @@ export const resources: ResourceConfig[] = [
     description: 'طلبات الإجازات وحالات الاعتماد والرفض.',
     endpoint: '/leave-requests/',
     path: '/resources/leave-requests',
-    group: 'leaves',
+    group: 'operations',
     icon: CalendarDays,
     columns: [
       { key: 'employee_name', label: 'الموظف' },
@@ -423,7 +398,7 @@ export const resources: ResourceConfig[] = [
     description: 'رصيد كل موظف حسب نوع الإجازة.',
     endpoint: '/leave-balances/',
     path: '/resources/leave-balances',
-    group: 'leaves',
+    group: 'operations',
     icon: ClipboardList,
     columns: [
       { key: 'employee_name', label: 'الموظف' },
@@ -442,7 +417,7 @@ export const resources: ResourceConfig[] = [
     description: 'تعريف أنواع الإجازات وشروط ظهورها.',
     endpoint: '/leave-types/',
     path: '/resources/leave-types',
-    group: 'leaves',
+    group: 'timeSetup',
     icon: CalendarClock,
     columns: [
       { key: 'name', label: 'النوع' },
@@ -463,7 +438,7 @@ export const resources: ResourceConfig[] = [
     description: 'قواعد الاستحقاق حسب نوع الموظف والحالة الاجتماعية.',
     endpoint: '/leave-laws/',
     path: '/resources/leave-laws',
-    group: 'leaves',
+    group: 'timeSetup',
     icon: Landmark,
     columns: [
       { key: 'leave_type_name', label: 'نوع الإجازة' },
@@ -488,37 +463,14 @@ export const resources: ResourceConfig[] = [
       },
     ],
   },
-  {
-    key: 'age-leave-laws',
-    title: 'قوانين العمر',
-    description: 'تفاصيل أرصدة الإجازة حسب عمر الموظف.',
-    endpoint: '/age-leave-laws/',
-    path: '/resources/age-leave-laws',
-    group: 'leaves',
-    icon: UserCheck,
-    columns: [
-      { key: 'leave_law_name', label: 'القانون' },
-      { key: 'age', label: 'أصغر من عمر' },
-      { key: 'start', label: 'بعد أيام دوام' },
-      { key: 'balance', label: 'الرصيد' },
-      { key: 'deportation', label: 'الترحيل %' },
-    ],
-    formFields: [
-      { key: 'leave_law', label: 'قانون الإجازة', type: 'select', relation: 'leave-laws', required: true },
-      { key: 'age', label: 'أصغر من العمر', type: 'number', required: true },
-      { key: 'start', label: 'تعطى بعد كم يوم دوام', type: 'number', required: true },
-      { key: 'balance', label: 'رصيد الإجازة', type: 'number', required: true },
-      { key: 'calculation', label: 'كم ساعة في اليوم', type: 'time' },
-      { key: 'deportation', label: 'نسبة الترحيل', type: 'number' },
-    ],
-  },
+
   {
     key: 'leave-days',
     title: 'أيام الإجازات',
     description: 'الأيام الثابتة أو السنوية المرتبطة بالإجازات.',
     endpoint: '/leave-days/',
     path: '/resources/leave-days',
-    group: 'leaves',
+    group: 'timeSetup',
     icon: CalendarDays,
     columns: [
       { key: 'name', label: 'الاسم' },
@@ -545,12 +497,27 @@ export const resources: ResourceConfig[] = [
     ],
   },
   {
+    key: 'groups',
+    title: 'المجموعات',
+    description: 'مجموعات الصلاحيات للمستخدمين.',
+    endpoint: '/groups/',
+    path: '/resources/groups',
+    group: 'system',
+    icon: ShieldCheck,
+    columns: [
+      { key: 'name', label: 'الاسم' },
+    ],
+    formFields: [
+      { key: 'name', label: 'اسم المجموعة', type: 'text', required: true },
+    ],
+  },
+  {
     key: 'users',
     title: 'المستخدمون',
     description: 'حسابات الدخول والصلاحيات الأساسية للنظام.',
     endpoint: '/users/',
     path: '/resources/users',
-    group: 'settings',
+    group: 'system',
     icon: KeyRound,
     columns: [
       { key: 'username', label: 'اسم المستخدم' },
@@ -582,7 +549,7 @@ export const resources: ResourceConfig[] = [
     description: 'المسميات ومهامها.',
     endpoint: '/job-titles/',
     path: '/resources/job-titles',
-    group: 'settings',
+    group: 'companySetup',
     icon: Contact,
     columns: [
       { key: 'name', label: 'المسمى' },
@@ -599,7 +566,7 @@ export const resources: ResourceConfig[] = [
     description: 'القيم المرجعية للمؤهلات والمستويات التعليمية.',
     endpoint: '/educational-levels/',
     path: '/resources/educational-levels',
-    group: 'settings',
+    group: 'companySetup',
     icon: GraduationCap,
     columns: [{ key: 'name', label: 'المستوى' }],
     formFields: [{ key: 'name', label: 'المستوى', type: 'text', required: true }],
@@ -610,7 +577,7 @@ export const resources: ResourceConfig[] = [
     description: 'موظف، متعاقد، يومي وغيرها.',
     endpoint: '/type-of-employees/',
     path: '/resources/type-of-employees',
-    group: 'settings',
+    group: 'companySetup',
     icon: Building2,
     columns: [
       { key: 'display', label: 'النوع' },
@@ -636,7 +603,7 @@ export const resources: ResourceConfig[] = [
     description: 'القيم المرجعية للحالة الاجتماعية.',
     endpoint: '/marital-statuses/',
     path: '/resources/marital-statuses',
-    group: 'settings',
+    group: 'companySetup',
     icon: Contact,
     columns: [
       { key: 'display', label: 'الحالة' },
@@ -661,7 +628,7 @@ export const resources: ResourceConfig[] = [
     description: 'أيام الدوام المستخدمة في الشفتات.',
     endpoint: '/days/',
     path: '/resources/days',
-    group: 'settings',
+    group: 'timeSetup',
     icon: CalendarDays,
     columns: [
       { key: 'day_name', label: 'اليوم' },

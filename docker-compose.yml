@@ -2,6 +2,10 @@ services:
   db:
     image: postgres:17-alpine
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       POSTGRES_DB: "${POSTGRES_DB:-aljamieat_alwasatia}"
       POSTGRES_USER: "${POSTGRES_USER:-aljamieat}"
@@ -16,6 +20,10 @@ services:
 
   backend:
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     build:
       context: .
       dockerfile: Dockerfile
@@ -40,10 +48,14 @@ services:
       POSTGRES_PORT: "5432"
     command: >
       sh -c "python manage.py migrate --noinput &&
-             gunicorn project.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+             gunicorn project.wsgi:application --bind 0.0.0.0:8000 --workers ${GUNICORN_WORKERS:-2} --timeout ${GUNICORN_TIMEOUT:-120} --max-requests ${GUNICORN_MAX_REQUESTS:-500} --max-requests-jitter ${GUNICORN_MAX_REQUESTS_JITTER:-50}"
 
   frontend:
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     build:
       context: ./frontend
       dockerfile: Dockerfile

@@ -21,6 +21,18 @@ export const useAuthStore = create<AuthState>((set) => ({
       localStorage.setItem('access_token', data.access)
       localStorage.setItem('refresh_token', data.refresh)
       localStorage.setItem('auth_username', username)
+
+      try {
+        const statusRes = await apiClient.get('/system-status/')
+        if (statusRes.data.setup_completed) {
+          localStorage.setItem('setup_completed', 'true')
+        } else {
+          localStorage.removeItem('setup_completed')
+        }
+      } catch (e) {
+        console.error('Failed to check system status', e)
+      }
+
       set({ username, isAuthenticated: true, isLoading: false })
     } catch (error: unknown) {
       localStorage.removeItem('access_token')

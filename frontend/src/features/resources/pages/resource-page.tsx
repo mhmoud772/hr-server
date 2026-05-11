@@ -23,6 +23,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { SlideOver } from '@/components/ui/slide-over'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/toast'
 import {
@@ -37,10 +38,10 @@ import { ResourceForm } from '@/features/resources/components/resource-form'
 import { getResourceByKey } from '@/features/resources/resource-config'
 
 const groupLabels = {
-  hr: 'الموارد البشرية',
-  attendance: 'الحضور والبصمة',
-  leaves: 'الإجازات',
-  settings: 'الإعدادات',
+  operations: 'العمليات الأساسية',
+  companySetup: 'هيكلة المنشأة',
+  timeSetup: 'إعدادات الدوام',
+  system: 'إعدادات النظام',
 } as const
 
 function formatValue(value: unknown) {
@@ -67,10 +68,40 @@ function getRecordKey(record: ResourceRecord, index: number) {
   return record.id ?? `${record.display ?? record.name ?? 'record'}-${index}`
 }
 
-function getErrorMessage(error: unknown) {
+function getErrorMessage(error: unknown): string {
   if (typeof error === 'object' && error && 'response' in error) {
     const response = (error as { response?: { data?: unknown } }).response
-    return JSON.stringify(response?.data ?? error)
+    const data = response?.data
+
+    if (data && typeof data === 'object') {
+      const responseData = data as Record<string, unknown>
+
+      if (typeof responseData.detail === 'string') {
+        return responseData.detail
+      }
+
+      const messages: string[] = []
+      for (const [key, value] of Object.entries(responseData)) {
+        if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'string') {
+          const fieldName = key === 'non_field_errors' ? '' : `${key}: `
+          messages.push(`${fieldName}${value.join(', ')}`)
+        } else if (typeof value === 'string') {
+          messages.push(value)
+        }
+      }
+
+      if (messages.length > 0) {
+        return messages.join(' | ')
+      }
+    }
+
+    if (typeof data === 'string') {
+      return data
+    }
+  }
+
+  if (error instanceof Error) {
+    return error.message
   }
 
   return 'حدث خطأ أثناء تنفيذ العملية.'
@@ -321,28 +352,22 @@ export function ResourcePage() {
         </div>
       </section>
 
-      {formOpen && (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {editingRecord ? `تعديل ${resource.title}` : `إضافة ${resource.title}`}
-            </CardTitle>
-            <CardDescription>
-              الحقول التي تحمل علامة * مطلوبة من الباك إند.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResourceForm
-              editingRecord={editingRecord}
-              errorMessage={formError}
-              isSaving={saveMutation.isPending}
-              onCancel={closeForm}
-              onSubmit={(payload) => saveMutation.mutate(payload)}
-              resource={resource}
-            />
-          </CardContent>
-        </Card>
-      )}
+      <SlideOver
+        isOpen={formOpen}
+        onClose={closeForm}
+        title={editingRecord ? `تعديل ${resource.title}` : `إضافة ${resource.title}`}
+        description="الحقول التي تحمل علامة * مطلوبة."
+        className="sm:w-[600px] w-full"
+      >
+        <ResourceForm
+          editingRecord={editingRecord}
+          errorMessage={formError}
+          isSaving={saveMutation.isPending}
+          onCancel={closeForm}
+          onSubmit={(payload) => saveMutation.mutate(payload)}
+          resource={resource}
+        />
+      </SlideOver>
 
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4">
@@ -419,7 +444,7 @@ export function ResourcePage() {
             </div>
           )}
 
-          {query.data && records.length > 0 && !records.length && (
+          {query.data && searchTerm && !records.length && (
             <div className="flex min-h-40 items-center justify-center rounded-md border border-outline-variant bg-surface-container-low p-6 text-center text-on-surface-variant">
               لا توجد نتائج مطابقة للبحث.
             </div>
@@ -566,8 +591,8 @@ export function ResourcePage() {
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-on-surface-variant">
                   عرض {(currentPage - 1) * pageSize + 1}-
-                  {Math.min(currentPage * pageSize, records.length)} من{' '}
-                  {records.length}
+                  {Math.min(currentPage * pageSize, totalCount)} من{' '}
+                  {totalCount}
                 </p>
                 <div className="flex items-center gap-2">
                   <Button

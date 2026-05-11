@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { BriefcaseBusiness, Fingerprint, Mail, Phone, Plus, Search, UserRoundCheck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -130,8 +131,24 @@ export function EmployeesWorkspacePage() {
         </CardHeader>
         <CardContent>
           {employeesQuery.isLoading && (
-            <div className="py-12 text-center text-on-surface-variant">
-              جار تحميل الموظفين...
+            <div className="grid gap-4 xl:grid-cols-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <article key={i} className="rounded-lg border border-outline-variant bg-card p-4 shadow-sm">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="space-y-2">
+                      <Skeleton className="h-6 w-32" />
+                      <Skeleton className="h-4 w-24" />
+                    </div>
+                    <Skeleton className="h-8 w-16" />
+                  </div>
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-2/3" />
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-4 w-1/3" />
+                  </div>
+                </article>
+              ))}
             </div>
           )}
 

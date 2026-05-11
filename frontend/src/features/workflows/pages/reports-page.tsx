@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
 
@@ -11,6 +10,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { useForm, useWatch } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { getResourceRecords } from '@/features/resources/api'
 
 function downloadCsv(filename: string, rows: Array<Record<string, unknown>>) {
@@ -33,8 +35,20 @@ function downloadCsv(filename: string, rows: Array<Record<string, unknown>>) {
   URL.revokeObjectURL(url)
 }
 
+
+const reportSchema = z.object({
+  month: z.string().min(1, 'الشهر مطلوب'),
+});
+
+type ReportFormValues = z.infer<typeof reportSchema>;
+
 export function ReportsPage() {
-  const [month, setMonth] = useState(new Date().toISOString().slice(0, 7))
+  const { control, register } = useForm<ReportFormValues>({
+    resolver: zodResolver(reportSchema),
+    defaultValues: { month: new Date().toISOString().slice(0, 7) }
+  })
+
+  const month = useWatch({ control, name: 'month' })
   const query = useQuery({
     queryKey: ['workflow', 'reports-attendance', month],
     queryFn: () => getResourceRecords('/attendance/', { month }),
@@ -63,8 +77,8 @@ export function ReportsPage() {
           <Input
             className="max-w-xs"
             type="month"
-            value={month}
-            onChange={(event) => setMonth(event.target.value)}
+            {...register('month')}
+
           />
           <Button
             disabled={!rows.length}

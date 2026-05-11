@@ -11,7 +11,7 @@ import { EmployeesWorkspacePage } from '@/features/workflows/pages/employees-wor
 import { FingerprintIntegrationPage } from '@/features/workflows/pages/fingerprint-integration-page'
 import { LeaveApprovalsPage } from '@/features/workflows/pages/leave-approvals-page'
 import { ReportsPage } from '@/features/workflows/pages/reports-page'
-
+import { SystemSettingsPage } from '@/features/settings/pages/system-settings-page'
 export const router = createBrowserRouter([
   {
     path: '/login',
@@ -63,6 +63,14 @@ export const router = createBrowserRouter([
           {
             path: 'workflows/fingerprint-integration',
             element: <FingerprintIntegrationPage />,
+          },
+          {
+            path: 'settings',
+            element: <SystemSettingsPage />,
+          },
+          {
+            path: '*',
+            element: <Navigate replace to="/" />,
           },
         ],
       },

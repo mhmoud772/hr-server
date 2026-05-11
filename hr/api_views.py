@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import filters, viewsets
 from rest_framework.permissions import IsAdminUser
 
@@ -34,6 +35,7 @@ from .serializers import (
     ShiftSerializer,
     TypeOfEmployeeSerializer,
     UserSerializer,
+    GroupSerializer,
 )
 
 User = get_user_model()
@@ -163,6 +165,14 @@ class UserViewSet(BaseModelViewSet):
     ordering = ('username',)
 
 
+class GroupViewSet(BaseModelViewSet):
+    permission_classes = (IsAdminUser,)
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    search_fields = ('name',)
+    ordering = ('name',)
+
+
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -204,3 +214,78 @@ def change_password(request):
     request.user.save()
 
     return Response({'detail': 'تم تغيير كلمة المرور بنجاح'})
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def system_status(request):
+    """
+    Returns system status, specifically whether basic setup is completed.
+    Setup is considered completed if there is at least one Employee or OrganizationalStructure.
+    """
+    is_setup_completed = Employee.objects.exists() or OrganizationalStructure.objects.exists()
+    return Response({
+        "setup_completed": is_setup_completed
+    })
+
+from django.db.models import Q
+from leaves.models import LeaveRequest
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def global_search(request):
+    """
+    Global search across employees, structures, and leave requests.
+    Returns unified format: { type, title, subtitle, href }
+    """
+    term = request.query_params.get('q', '').strip()
+    if len(term) < 2:
+        return Response([])
+
+    results = []
+
+    # Search Employees
+    employees = Employee.objects.filter(
+        Q(name__icontains=term) |
+        Q(number_employee__icontains=term) |
+        Q(phone__icontains=term) |
+        Q(email__icontains=term)
+    )[:5]
+    for emp in employees:
+        results.append({
+            'type': 'موظف',
+            'title': emp.name,
+            'subtitle': str(emp.number_employee or emp.phone or 'موظف'),
+            'href': '/workflows/employees',
+        })
+
+    # Search Organizational Structures
+    structures = OrganizationalStructure.objects.filter(
+        Q(name__icontains=term)
+    )[:3]
+    for struct in structures:
+        results.append({
+            'type': 'هيكل',
+            'title': struct.name,
+            'subtitle': 'الهيكل التنظيمي',
+            'href': '/groups/companySetup',
+        })
+
+    # Search Leave Requests
+    leaves = LeaveRequest.objects.filter(
+        Q(employee__name__icontains=term) |
+        Q(leave_type__name__icontains=term) |
+        Q(start_day__icontains=term)
+    )[:5]
+    for leave in leaves:
+        results.append({
+            'type': 'إجازة',
+            'title': leave.employee.name if leave.employee else 'طلب إجازة',
+            'subtitle': f'إجازة {leave.start_day}',
+            'href': '/workflows/leave-approvals',
+        })
+
+    return Response(results)

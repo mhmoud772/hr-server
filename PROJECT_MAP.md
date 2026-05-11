@@ -29,10 +29,10 @@
 | الحزمة | الإصدار المستخدم | أحدث مستقر | ملاحظات |
 |--------|------------------|------------|---------|
 | vite | ^8.0.11 | 8.0.11 | ✅ محدث |
-| typescript | ~6.0.2 | 6.0.3 | ⚠️ TS v6 جديد — تحقق من توافق @types/react |
+| typescript | ~6.0.2 | 6.0.3 | ⚠️ Patch متاح — 6.0.3 مستقر |
 | @types/react | ^18.3.28 | 18.3.28 | ✅ يتوافق مع React 18 |
-| tailwindcss | ^3.4.19 | 4.2.4 | ⚠️ **فجوة إصدار كبيرة** — Tailwind v4: تكوين مختلف (CSS-based)، PostCSS plugin مختلف. الترقية تتطلب إعادة هيكلة ملفات css |
-| eslint | ^10.2.1 | 10.2.1 | ✅ محدث |
+| tailwindcss | ^3.4.19 | 4.3.0 | ⚠️ **فجوة إصدار كبيرة** — Tailwind v4: تكوين مختلف (CSS-based)، PostCSS plugin مختلف. الترقية تتطلب إعادة هيكلة ملفات css |
+| eslint | ^10.2.1 | 10.3.0 | ⚠️ Patch متاح — ترقية آمنة |
 | postcss | ^8.5.14 | 8.5.14 | ✅ محدث |
 | autoprefixer | ^10.5.0 | 10.5.0 | ✅ محدث |
 | @vitejs/plugin-react | ^6.0.1 | 6.0.1 | ✅ محدث |
@@ -96,6 +96,7 @@
 
 ```
 /login                               → LoginPage (غير محمي)
+/setup                               → SetupWizardPage (محمي، شرط التهيئة)
 /                                    → DashboardLayout (محمي)
   /                                  → DashboardPage
   /employees                         → Redirect → /workflows/employees
@@ -106,6 +107,9 @@
   /workflows/attendance              → AttendanceWorkdayPage
   /workflows/leave-approvals         → LeaveApprovalsPage
   /workflows/reports                 → ReportsPage
+  /workflows/fingerprint-integration → FingerprintIntegrationPage
+  /settings                          → ⚠️ مسار يتيم — معرف في breadcrumb دون route
+  *                                  → Redirect → /
 ```
 
 ---
@@ -159,13 +163,16 @@ src/
     │   └── pages/
     │       ├── resource-page.tsx    # CRUD table view (server-side pagination)
     │       └── resource-group-page.tsx
+    ├── settings/                    # ⚠️ ORPHAN — غير مستورد في Router
+    │   └── pages/system-settings-page.tsx
     └── workflows/                   # Specialized operational pages
         ├── pages/
         │   ├── attendance-workday-page.tsx
         │   ├── employees-workspace-page.tsx
+        │   ├── fingerprint-integration-page.tsx
         │   ├── leave-approvals-page.tsx
         │   └── reports-page.tsx
-```
+        ```
 
 ### المبادئ المعمارية
 
@@ -187,7 +194,22 @@ src/
 
 ## [ORPHANS & PENDING]
 
-لا توجد Orphans أو نواقص تنفيذية مفتوحة ضمن نطاق المنتج الحالي.
+### ⚠️ Orphans — مفتوحة (تحتاج تدخل)
+
+| الملف | المشكلة | الأولوية |
+|-------|---------|----------|
+| `features/settings/pages/system-settings-page.tsx` | صفحة كاملة مصدرة ولكن **غير مستوردة** في Router. المسار `/settings` مشار إليه في `dashboard-layout.tsx:286` (breadcrumb) لكن لا يوجد route فعلي. | **عالية** — إما حذف أو ربط بالراوتر |
+| `assets/hero.png` | ملف صورة غير مستخدم في أي كود. | **منخفضة** — حذف |
+| `features/resources/pages/resource-group-page.tsx` | موجودة في Router ولكن غير موثقة في PROJECT_MAP سابقاً. الوظيفة: عرض موارد مجموعة معينة. | **معلوماتية** — موجودة وتعمل |
+
+### 🔧 Known Issues — مفتوحة
+
+| المشكلة | الموقع | التفاصيل | الأولوية |
+|---------|--------|----------|----------|
+| FormData بدلاً من react-hook-form | `resource-form.tsx:168` | يستخدم `new FormData(event.currentTarget)` بدلاً من `watch/setValue` من react-hook-form. يعمل لكن غير متسق مع صفحة login. | **متوسطة** |
+| بحث عالمي Client-side | `dashboard-layout.tsx:223` | يفلتر employees/leaves في الذاكرة بدلاً من إرسال search term إلى API. مقبول للحجم الصغير. | **منخفضة** |
+| Password form يدوي | `dashboard-layout.tsx:110` | يستخدم `useState` بدلاً من react-hook-form. | **منخفضة** |
+| Notification queries 4 parallel | `dashboard-layout.tsx:165` | 4 useQueries متوازية في كل رندر للـ Layout (مخفف بـ staleTime: 60_000). | **معلوماتية** |
 
 ### قرارات مؤجلة وليست نواقص
 
@@ -196,6 +218,8 @@ src/
 | ترقية React 18 → 19 | ترقية Major بلا حاجة وظيفية حالية، وتتطلب دورة تحقق منفصلة. |
 | ترقية Tailwind 3 → 4 | ترقية Major تغيّر أسلوب التكوين وتستحق migration مستقل. |
 | i18n | النصوص العربية الحالية هي لغة المنتج المطلوبة حالياً. |
+| ترقية TypeScript 6.0.2 → 6.0.3 | Patch آمن — مؤجل للدورة التالية لتحديث جميع الـ patches معاً. |
+| ترقية ESLint 10.2.1 → 10.3.0 | Patch آمن — مؤجل للدورة التالية. |
 
 ### ✅ Orphans — تم الحل
 
@@ -283,6 +307,16 @@ src/
 - [x] إضافة `.env.docker.example` وتوثيق تشغيل Docker
 - [x] إضافة `.dockerignore` للجذر والفرونت لتقليل سياق البناء
 
+### M10 — Architectural Audit & Hygiene (2026-05-10) ⬜
+- [ ] **Orphan**: ربط `SystemSettingsPage` بالراوتر في `/settings` أو حذف الملف
+- [ ] **Orphan**: حذف `assets/hero.png` (غير مستخدم)
+- [ ] **Consistency**: تحويل `resource-form.tsx` إلى react-hook-form بدلاً من FormData
+- [ ] **Consistency**: تحويل password modal في `dashboard-layout.tsx` إلى react-hook-form + Zod
+- [ ] **Patch**: ترقية TypeScript `~6.0.2` → `~6.0.3`
+- [ ] **Patch**: ترقية ESLint `^10.2.1` → `^10.3.0`
+- [ ] **Deps**: التحقق من توافق `typescript-eslint` مع TS 6.0.3 و ESLint 10.3.0
+- [ ] **Verification**: `npm run lint && npm run build` — سليم
+
 ---
 
-*ملف تم تحديثه بواسطة Execution Engine — 2026-05-07*
+*ملف تم تحديثه بواسطة Architectural Audit — 2026-05-10*
