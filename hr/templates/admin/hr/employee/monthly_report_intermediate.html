@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    
+    <h2>{% trans "إصدار تقرير الحضور الشهري" %}</h2>
+    <p>{% trans "الرجاء تحديد الشهر والسنة للتقرير المطلوب." %}</p>
+    
+    <fieldset class="module aligned">
+        <div class="form-row">
+            {{ form.month.label_tag }} {{ form.month }}
+        </div>
+        <div class="form-row">
+            {{ form.year.label_tag }} {{ form.year }}
+        </div>
+    </fieldset>
+
+    {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}">
+    {% endfor %}
+    <input type="hidden" name="action" value="export_monthly_report_action">
+    <input type="hidden" name="post" value="true">
+
+    <div class="submit-row">
+        <input type="submit" value="{% trans 'تصدير التقرير' %}" class="default">
+    </div>
+</form>
+{% endblock %}
