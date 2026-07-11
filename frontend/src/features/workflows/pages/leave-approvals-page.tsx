@@ -84,11 +84,11 @@ export function LeaveApprovalsPage() {
   return (
     <div className="space-y-6">
       <section>
-        <p className="text-label-md text-on-surface-variant">الإجازات</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-normal text-on-surface">
+        <p className="text-label-md text-muted-foreground">الإجازات</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-normal text-foreground">
           اعتماد طلبات الإجازة
         </h2>
-        <p className="mt-2 text-sm text-on-surface-variant">
+        <p className="mt-2 text-sm text-muted-foreground">
           شاشة تشغيلية سريعة لقبول أو رفض الطلبات المعلقة.
         </p>
       </section>
@@ -142,7 +142,7 @@ export function LeaveApprovalsPage() {
           {query.isLoading && (
             <div className="grid gap-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex flex-col justify-between gap-3 rounded-md border border-outline-variant bg-card p-4 md:flex-row md:items-center">
+                <div key={i} className="flex flex-col justify-between gap-3 rounded-md border border-border bg-card p-4 md:flex-row md:items-center">
                   <div className="space-y-2">
                     <Skeleton className="h-5 w-40" />
                     <Skeleton className="h-4 w-60" />
@@ -158,7 +158,7 @@ export function LeaveApprovalsPage() {
           )}
 
           {!query.isLoading && !requests.length && (
-            <div className="rounded-lg border border-dashed border-outline-variant bg-surface-container-low p-10 text-center text-on-surface-variant">
+            <div className="rounded-lg border border-dashed border-border bg-muted p-10 text-center text-muted-foreground">
               لا توجد طلبات في هذا التصنيف.
             </div>
           )}
@@ -166,14 +166,14 @@ export function LeaveApprovalsPage() {
           <div className="grid gap-3">
             {requests.map((request: ResourceRecord) => (
               <div
-                className="flex flex-col justify-between gap-3 rounded-md border border-outline-variant bg-card p-4 md:flex-row md:items-center"
+                className="flex flex-col justify-between gap-3 rounded-md border border-border bg-card p-4 md:flex-row md:items-center"
                 key={String(request.id)}
               >
                 <div>
-                  <p className="font-semibold text-on-surface">
+                  <p className="font-semibold text-foreground">
                     {String(request.employee_name ?? 'موظف غير محدد')}
                   </p>
-                  <p className="mt-1 text-sm text-on-surface-variant">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {String(request.leave_type_name ?? 'إجازة')} من{' '}
                     {String(request.start_day ?? '-')} إلى{' '}
                     {String(request.end_day ?? '-')}

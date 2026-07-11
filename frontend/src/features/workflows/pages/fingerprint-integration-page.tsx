@@ -210,25 +210,25 @@ export function FingerprintIntegrationPage() {
         title="تأكيد إرسال الاختبار"
       />
 
-      <section className="rounded-xl border border-outline-variant bg-card p-5 shadow-sm">
+      <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
           <div className="flex items-start gap-3">
             <span className="rounded-lg bg-primary p-3 text-primary-foreground shadow-sm">
               <Fingerprint className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-label-md text-on-surface-variant">أجهزة الحضور</p>
-              <h2 className="mt-1 text-2xl font-bold tracking-normal text-on-surface">
+              <p className="text-label-md text-muted-foreground">أجهزة الحضور</p>
+              <h2 className="mt-1 text-2xl font-bold tracking-normal text-foreground">
                 فحص اتصال البصمة
               </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
                 راجع الأجهزة المسجلة وأرسل بصمة اختبار عند الحاجة للتأكد من أن الاستقبال يعمل.
               </p>
             </div>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="flex min-w-52 items-center gap-3 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-3">
+            <div className="flex min-w-52 items-center gap-3 rounded-lg border border-border bg-muted px-4 py-3">
               <span
                 className={
                   systemStatus.tone === 'success'
@@ -242,7 +242,7 @@ export function FingerprintIntegrationPage() {
               </span>
               <div>
                 <p className="text-sm font-bold">{systemStatus.label}</p>
-                <p className="text-xs text-on-surface-variant">
+                <p className="text-xs text-muted-foreground">
                   {systemStatus.description}
                 </p>
               </div>
@@ -260,30 +260,30 @@ export function FingerprintIntegrationPage() {
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <div className="flex items-center gap-3 rounded-lg border border-outline-variant bg-surface-container-low p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-muted p-3">
             <span className="rounded-md bg-primary-fixed p-2 text-primary-fixed-foreground">
               <Server className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-xs text-on-surface-variant">إجمالي الأجهزة</p>
+              <p className="text-xs text-muted-foreground">إجمالي الأجهزة</p>
               <p className="mt-1 text-xl font-bold">{totalDevices}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-outline-variant bg-surface-container-low p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-muted p-3">
             <span className="rounded-md bg-success/15 p-2 text-success">
               <ShieldCheck className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-xs text-on-surface-variant">الأجهزة النشطة</p>
+              <p className="text-xs text-muted-foreground">الأجهزة النشطة</p>
               <p className="mt-1 text-xl font-bold">{activeDevices}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-outline-variant bg-surface-container-low p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-muted p-3">
             <span className="rounded-md bg-info/15 p-2 text-info">
               <Clock3 className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-xs text-on-surface-variant">آخر اختبار</p>
+              <p className="text-xs text-muted-foreground">آخر اختبار</p>
               <p className="mt-1 text-xl font-bold">{lastSubmitted ? 'ناجح' : 'لم يتم'}</p>
             </div>
           </div>
@@ -301,7 +301,7 @@ export function FingerprintIntegrationPage() {
           </CardHeader>
           <CardContent>
             {devicesQuery.isLoading && (
-              <div className="rounded-lg border border-outline-variant bg-muted p-4 text-sm text-muted-foreground">
+              <div className="rounded-lg border border-border bg-muted p-4 text-sm text-muted-foreground">
                 جاري تحميل الأجهزة...
               </div>
             )}
@@ -314,15 +314,15 @@ export function FingerprintIntegrationPage() {
             )}
 
             {devicesQuery.data && devicesQuery.data.length === 0 && (
-              <div className="rounded-lg border border-outline-variant bg-surface-container-low p-6 text-center text-sm text-on-surface-variant">
+              <div className="rounded-lg border border-border bg-muted p-6 text-center text-sm text-muted-foreground">
                 لا توجد أجهزة بصمة مسجلة حالياً.
               </div>
             )}
 
             {devicesQuery.data && devicesQuery.data.length > 0 && (
-              <div className="overflow-hidden rounded-lg border border-outline-variant">
+              <div className="overflow-hidden rounded-lg border border-border">
                 <table className="w-full min-w-[620px] text-sm">
-                  <thead className="bg-surface-container text-on-surface-variant">
+                  <thead className="bg-card text-muted-foreground">
                     <tr>
                       <th className="px-4 py-3 text-right font-semibold">الجهاز</th>
                       <th className="px-4 py-3 text-right font-semibold">الموقع</th>
@@ -330,9 +330,9 @@ export function FingerprintIntegrationPage() {
                       <th className="px-4 py-3 text-right font-semibold">الحالة</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-outline-variant bg-card">
+                  <tbody className="divide-y divide-border bg-card">
                     {devicesQuery.data.map((device) => (
-                      <tr className="transition-colors hover:bg-surface-container-low" key={device.id}>
+                      <tr className="transition-colors hover:bg-muted" key={device.id}>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <span
@@ -344,20 +344,20 @@ export function FingerprintIntegrationPage() {
                             />
                             <div>
                               <p className="font-medium">{device.name}</p>
-                              <p className="text-xs text-on-surface-variant">
+                              <p className="text-xs text-muted-foreground">
                                 رقم الجهاز {device.id}
                               </p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-on-surface-variant">
+                        <td className="px-4 py-3 text-muted-foreground">
                           <span className="inline-flex items-center gap-1">
                             <MapPin className="h-3.5 w-3.5" />
                             {device.location}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-on-surface-variant">
-                          <span className="inline-flex items-center gap-1 rounded-md bg-surface-container-low px-2 py-1 font-mono text-xs">
+                        <td className="px-4 py-3 text-muted-foreground">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-1 font-mono text-xs">
                             <Network className="h-3.5 w-3.5" />
                             {device.ip_address}:{device.port}
                           </span>
@@ -387,13 +387,13 @@ export function FingerprintIntegrationPage() {
           <CardContent>
             <div className="mb-4 flex items-start gap-3 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm">
               <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
-              <p className="text-on-surface-variant">
+              <p className="text-muted-foreground">
                 هذا الإجراء ينشئ سجل حضور اختباري، لذلك استخدم رقم بصمة مخصصاً للاختبار متى أمكن.
               </p>
             </div>
 
             <form className="space-y-4" onSubmit={submitPush}>
-              <section className="rounded-lg border border-outline-variant bg-surface-container-lowest p-4">
+              <section className="rounded-lg border border-border bg-card p-4">
                 <div className="mb-3 flex items-center gap-2">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
                     1
@@ -413,7 +413,7 @@ export function FingerprintIntegrationPage() {
                 </Select>
               </section>
 
-              <section className="rounded-lg border border-outline-variant bg-surface-container-lowest p-4">
+              <section className="rounded-lg border border-border bg-card p-4">
                 <div className="mb-3 flex items-center gap-2">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
                     2
@@ -463,22 +463,22 @@ export function FingerprintIntegrationPage() {
                   </span>
                   <p className="font-semibold text-primary-fixed-foreground">راجع الاختبار</p>
                 </div>
-                <div className="mt-3 grid gap-2 text-on-surface-variant">
+                <div className="mt-3 grid gap-2 text-muted-foreground">
                   <div className="flex justify-between gap-3">
                     <span>الجهاز</span>
-                    <span className="font-medium text-on-surface">
+                    <span className="font-medium text-foreground">
                       {selectedDevice?.name ?? 'لم يتم الاختيار'}
                     </span>
                   </div>
                   <div className="flex justify-between gap-3">
                     <span>رقم البصمة</span>
-                    <span className="font-medium text-on-surface">
+                    <span className="font-medium text-foreground">
                       {formUserId || '-'}
                     </span>
                   </div>
                   <div className="flex justify-between gap-3">
                     <span>الحالة</span>
-                    <span className="font-medium text-on-surface">
+                    <span className="font-medium text-foreground">
                       {getStatusLabel(formStatus)}
                     </span>
                   </div>
@@ -496,7 +496,7 @@ export function FingerprintIntegrationPage() {
                 <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" />
                 <div>
                   <p className="font-semibold">آخر اختبار تم بنجاح</p>
-                  <p className="mt-1 text-on-surface-variant">
+                  <p className="mt-1 text-muted-foreground">
                     رقم البصمة {lastSubmitted.user_id} في {lastSubmitted.timestamp}
                   </p>
                 </div>

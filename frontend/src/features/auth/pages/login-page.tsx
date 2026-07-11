@@ -92,7 +92,7 @@ export function LoginPage() {
 
         {/* Gradient Border Wrapper */}
         <div
-          className="group relative rounded-3xl bg-gradient-to-b from-primary/30 via-outline-variant/20 to-transparent p-[1px] shadow-2xl shadow-primary/5"
+          className="group relative rounded-3xl bg-gradient-to-b from-primary/30 via-border/20 to-transparent p-[1px] shadow-2xl shadow-primary/5"
           ref={cardRef}
           onMouseMove={handleMouseMove}
         >
@@ -105,14 +105,14 @@ export function LoginPage() {
           />
 
           {/* Inner Card */}
-          <div className="relative flex flex-col rounded-[calc(1.5rem-1px)] bg-surface/90 p-8 backdrop-blur-xl dark:bg-surface-variant/40 sm:p-10">
+          <div className="relative flex flex-col rounded-[calc(1.5rem-1px)] bg-background/90 p-8 backdrop-blur-xl dark:bg-secondary/40 sm:p-10">
 
             {/* Branding Header */}
             <div className="mb-8 flex flex-col items-center text-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center">
                 <img
                   alt="شعار النظام"
-                  className="h-10 w-10"
+                  className="h-16 w-16"
                   src={brandLogo}
                 />
               </div>
@@ -136,7 +136,7 @@ export function LoginPage() {
                   <UserRound className="pointer-events-none absolute right-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/50 transition-colors group-focus-within/field:text-primary" />
                   <Input
                     autoComplete="username"
-                    className="h-12 border-outline-variant/40 bg-background/50 pr-11 text-base transition-all focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary hover:border-outline-variant"
+                    className="h-12 border-border/40 bg-background/50 pr-11 text-base transition-all focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary hover:border-border"
                     disabled={isSubmitting}
                     id="username"
                     placeholder="أدخل رقمك الوظيفي"
@@ -162,7 +162,7 @@ export function LoginPage() {
                   <LockKeyhole className="pointer-events-none absolute right-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/50 transition-colors group-focus-within/field:text-primary" />
                   <Input
                     autoComplete="current-password"
-                    className="h-12 border-outline-variant/40 bg-background/50 px-11 text-base transition-all focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary hover:border-outline-variant"
+                    className="h-12 border-border/40 bg-background/50 px-11 text-base transition-all focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary hover:border-border"
                     disabled={isSubmitting}
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -170,7 +170,7 @@ export function LoginPage() {
                   />
                   <button
                     aria-label={showPassword ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'}
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-muted-foreground/50 transition-colors hover:bg-outline-variant/30 hover:text-foreground"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 rounded-md p-2 text-muted-foreground/50 transition-colors hover:bg-border/30 hover:text-foreground"
                     onClick={() => setShowPassword((value) => !value)}
                     type="button"
                   >
@@ -193,7 +193,7 @@ export function LoginPage() {
                 <input
                   type="checkbox"
                   id="rememberMe"
-                  className="h-4 w-4 rounded border-outline-variant/50 text-primary focus:ring-primary"
+                  className="h-4 w-4 rounded border-border/50 text-primary focus:ring-primary"
                   {...register('rememberMe')}
                 />
                 <label htmlFor="rememberMe" className="text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">

@@ -26,6 +26,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { SlideOver } from '@/components/ui/slide-over'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/toast'
+import { useDebounce } from '@/hooks/use-debounce'
 import {
   createResourceRecord,
   deleteResourceRecord,
@@ -120,7 +121,7 @@ function ResourceSkeleton() {
     <div className="space-y-3">
       {Array.from({ length: 6 }).map((_, index) => (
         <div
-          className="grid animate-pulse gap-3 rounded-lg border border-outline-variant p-4 md:grid-cols-5"
+          className="grid animate-pulse gap-3 rounded-lg border border-border p-4 md:grid-cols-5"
           key={index}
         >
           <div className="h-4 rounded bg-muted md:col-span-2" />
@@ -145,15 +146,16 @@ export function ResourcePage() {
   const [detailsRecord, setDetailsRecord] = useState<ResourceRecord | null>(null)
   const [page, setPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
+  const debouncedSearchTerm = useDebounce(searchTerm)
   const pageSize = 10
 
   const query = useQuery({
-    queryKey: ['resource', resource?.key, page, searchTerm],
+    queryKey: ['resource', resource?.key, page, debouncedSearchTerm],
     queryFn: () =>
       getResourceRecords(resource!.endpoint, {
         page,
         pageSize,
-        search: searchTerm || undefined,
+        search: debouncedSearchTerm || undefined,
       }),
     enabled: Boolean(resource),
     placeholderData: keepPreviousData,
@@ -300,20 +302,20 @@ export function ResourcePage() {
         title={resource.title}
       />
 
-      <section className="rounded-xl border border-outline-variant bg-card p-5 shadow-sm">
+      <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div className="flex items-start gap-3">
             <span className="rounded-xl bg-primary p-3 text-primary-foreground shadow-sm">
               <Icon className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-label-md text-on-surface-variant">
+              <p className="text-label-md text-muted-foreground">
                 {groupLabels[resource.group]}
               </p>
-              <h2 className="mt-1 text-2xl font-bold tracking-normal text-on-surface">
+              <h2 className="mt-1 text-2xl font-bold tracking-normal text-foreground">
                 {resource.title}
               </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
                 {resource.description}
               </p>
             </div>
@@ -337,16 +339,16 @@ export function ResourcePage() {
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-            <p className="text-xs text-on-surface-variant">إجمالي السجلات</p>
+          <div className="rounded-lg border border-border bg-muted p-3">
+            <p className="text-xs text-muted-foreground">إجمالي السجلات</p>
             <p className="mt-1 text-xl font-bold">{query.data?.count ?? 0}</p>
           </div>
-          <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-            <p className="text-xs text-on-surface-variant">المعروض حالياً</p>
+          <div className="rounded-lg border border-border bg-muted p-3">
+            <p className="text-xs text-muted-foreground">المعروض حالياً</p>
             <p className="mt-1 text-xl font-bold">{records.length}</p>
           </div>
-          <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3">
-            <p className="text-xs text-on-surface-variant">حقول النموذج</p>
+          <div className="rounded-lg border border-border bg-muted p-3">
+            <p className="text-xs text-muted-foreground">حقول النموذج</p>
             <p className="mt-1 text-xl font-bold">{resource.formFields.length}</p>
           </div>
         </div>
@@ -423,7 +425,7 @@ export function ResourcePage() {
                   <Download className="h-4 w-4" />
                   تصدير
                 </Button>
-                <div className="rounded-md bg-muted px-3 py-2 text-sm text-on-surface-variant">
+                <div className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
                   الصفحة {currentPage} من {totalPages}
                 </div>
               </div>
@@ -431,7 +433,7 @@ export function ResourcePage() {
           )}
 
           {query.data && !records.length && (
-            <div className="flex min-h-56 flex-col items-center justify-center gap-3 rounded-md border border-outline-variant bg-surface-container-low p-6 text-center text-on-surface-variant">
+            <div className="flex min-h-56 flex-col items-center justify-center gap-3 rounded-md border border-border bg-muted p-6 text-center text-muted-foreground">
               <Database className="h-8 w-8" />
               <p className="font-semibold">لا توجد سجلات بعد.</p>
               <p className="max-w-md text-sm">
@@ -445,7 +447,7 @@ export function ResourcePage() {
           )}
 
           {query.data && searchTerm && !records.length && (
-            <div className="flex min-h-40 items-center justify-center rounded-md border border-outline-variant bg-surface-container-low p-6 text-center text-on-surface-variant">
+            <div className="flex min-h-40 items-center justify-center rounded-md border border-border bg-muted p-6 text-center text-muted-foreground">
               لا توجد نتائج مطابقة للبحث.
             </div>
           )}
@@ -455,7 +457,7 @@ export function ResourcePage() {
               <div className="grid gap-3 md:hidden">
                 {records.map((record, index) => (
                   <div
-                    className="rounded-lg border border-outline-variant bg-card p-4 shadow-sm"
+                    className="rounded-lg border border-border bg-card p-4 shadow-sm"
                     key={getRecordKey(record, index)}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -463,7 +465,7 @@ export function ResourcePage() {
                         <p className="font-bold">
                           {formatValue(record[resource.columns[0]?.key])}
                         </p>
-                        <p className="mt-1 text-xs text-on-surface-variant">
+                        <p className="mt-1 text-xs text-muted-foreground">
                           {resource.title}
                         </p>
                       </div>
@@ -482,7 +484,7 @@ export function ResourcePage() {
                           className="flex items-center justify-between gap-3 text-sm"
                           key={column.key}
                         >
-                          <span className="text-on-surface-variant">
+                          <span className="text-muted-foreground">
                             {column.label}
                           </span>
                           <span className="max-w-40 truncate font-medium">
@@ -516,10 +518,10 @@ export function ResourcePage() {
                 ))}
               </div>
 
-              <div className="hidden overflow-hidden rounded-md border border-outline-variant md:block">
-                <div className="overflow-x-auto">
+              <div className="hidden overflow-hidden rounded-md border border-border md:block">
+                <div className="max-h-[520px] overflow-auto">
                   <table className="w-full min-w-[760px] text-sm">
-                    <thead className="bg-surface-container text-on-surface-variant">
+                    <thead className="sticky top-0 z-10 bg-card text-muted-foreground shadow-sm">
                       <tr>
                         {resource.columns.map((column) => (
                           <th
@@ -534,15 +536,15 @@ export function ResourcePage() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-outline-variant bg-card">
+                    <tbody className="divide-y divide-border bg-card">
                       {records.map((record, index) => (
                         <tr
-                          className="transition-colors hover:bg-surface-container-low"
+                          className="transition-colors hover:bg-muted"
                           key={getRecordKey(record, index)}
                         >
                           {resource.columns.map((column) => (
                             <td
-                              className="max-w-[280px] truncate px-4 py-3 text-on-surface-variant"
+                              className="max-w-[280px] truncate px-4 py-3 text-muted-foreground"
                               key={column.key}
                               title={formatValue(record[column.key])}
                             >
@@ -589,31 +591,58 @@ export function ResourcePage() {
               </div>
 
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-on-surface-variant">
+                <p className="text-sm text-muted-foreground">
                   عرض {(currentPage - 1) * pageSize + 1}-
                   {Math.min(currentPage * pageSize, totalCount)} من{' '}
                   {totalCount}
                 </p>
-                <div className="flex items-center gap-2">
-                  <Button
-                    disabled={currentPage === 1}
-                    onClick={() => setPage((value) => Math.max(1, value - 1))}
-                    type="button"
-                    variant="outline"
-                  >
-                    السابق
-                  </Button>
-                  <Button
-                    disabled={currentPage === totalPages}
-                    onClick={() =>
-                      setPage((value) => Math.min(totalPages, value + 1))
-                    }
-                    type="button"
-                    variant="outline"
-                  >
-                    التالي
-                  </Button>
-                </div>
+                {totalPages > 1 && (
+                  <div className="flex items-center gap-1">
+                    <Button
+                      disabled={currentPage === 1}
+                      onClick={() => setPage((value) => Math.max(1, value - 1))}
+                      size="sm"
+                      type="button"
+                      variant="outline"
+                    >
+                      السابق
+                    </Button>
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      let pageNum: number
+                      if (totalPages <= 5) {
+                        pageNum = i + 1
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i
+                      } else {
+                        pageNum = currentPage - 2 + i
+                      }
+                      return (
+                        <Button
+                          key={pageNum}
+                          onClick={() => setPage(pageNum)}
+                          size="sm"
+                          type="button"
+                          variant={currentPage === pageNum ? 'default' : 'outline'}
+                        >
+                          {pageNum}
+                        </Button>
+                      )
+                    })}
+                    <Button
+                      disabled={currentPage === totalPages}
+                      onClick={() =>
+                        setPage((value) => Math.min(totalPages, value + 1))
+                      }
+                      size="sm"
+                      type="button"
+                      variant="outline"
+                    >
+                      التالي
+                    </Button>
+                  </div>
+                )}
               </div>
             </>
           )}

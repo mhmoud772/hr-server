@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { PageTransition } from '@/components/ui/page-transition'
 import { getResourceRecords, type ResourceRecord } from '@/features/resources/api'
 
 const queries = [
@@ -241,27 +242,28 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-outline-variant bg-primary p-6 text-primary-foreground shadow-soft">
+      <PageTransition>
+        <section className="rounded-2xl bg-gradient-to-l from-primary via-primary to-blue-600 p-6 text-white shadow-lg shadow-primary/20 lg:p-8">
         <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-center">
           <div>
-            <p className="text-sm font-semibold text-primary-foreground/75">
+            <p className="text-sm font-semibold text-white/70">
               لوحة التحكم
             </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-normal">
+            <h2 className="mt-2 text-2xl font-bold tracking-tight lg:text-3xl">
               مركز قيادة الموارد البشرية
             </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-primary-foreground/80">
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/75">
               ماذا يحدث اليوم؟ ما الذي يحتاج قراراً؟ وما أسرع إجراء مطلوب؟
               هذه الصفحة تجمع الإجابة في مكان واحد.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button asChild className="bg-white text-primary hover:bg-white/90">
+            <Button asChild className="bg-white text-primary hover:bg-white/90 shadow-lg shadow-black/10">
               <Link to="/workflows/employees">ملف الموظفين</Link>
             </Button>
             <Button
               asChild
-              className="border-white/50 bg-transparent text-white hover:bg-white/15"
+              className="border-white/30 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
               variant="outline"
             >
               <Link to="/workflows/leave-approvals">اعتماد الإجازات</Link>
@@ -269,8 +271,10 @@ export function DashboardPage() {
           </div>
         </div>
       </section>
+      </PageTransition>
 
       {!setupComplete && (
+        <PageTransition delay={50}>
         <Card>
           <CardHeader>
             <CardTitle>ابدأ تهيئة النظام</CardTitle>
@@ -282,25 +286,27 @@ export function DashboardPage() {
           <CardContent className="grid gap-3 md:grid-cols-4">
             {setupSteps.map((step, index) => (
               <Link
-                className="rounded-lg border border-outline-variant bg-card p-4 transition-colors hover:bg-surface-container-low"
+                className="rounded-xl border border-border/60 bg-card p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-sm"
                 key={step.title}
                 to={step.href}
               >
                 <div className="flex items-center justify-between gap-3">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-fixed text-sm font-bold text-primary">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
                     {index + 1}
                   </span>
                   <Badge variant={step.done ? 'success' : 'warning'}>
                     {step.done ? 'مكتمل' : 'مطلوب'}
                   </Badge>
                 </div>
-                <p className="mt-4 font-semibold">{step.title}</p>
+                <p className="mt-4 font-semibold text-foreground">{step.title}</p>
               </Link>
             ))}
           </CardContent>
         </Card>
+        </PageTransition>
       )}
 
+      <PageTransition delay={100}>
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.title}>
@@ -308,19 +314,21 @@ export function DashboardPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {stat.title}
               </CardTitle>
-              <span className="rounded-md bg-primary-fixed p-2 text-primary-fixed-foreground">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <stat.icon className="h-5 w-5" />
               </span>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{stat.value}</div>
+              <div className="text-3xl font-bold tracking-tight">{stat.value}</div>
               <p className="mt-1 text-sm text-muted-foreground">{stat.note}</p>
             </CardContent>
           </Card>
         ))}
       </section>
+      </PageTransition>
 
-      <section className="grid gap-4 xl:grid-cols-[0.8fr_1.2fr]">
+      <PageTransition delay={200}>
+      <section className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
         <Card>
           <CardHeader>
             <CardTitle>إجراءات سريعة</CardTitle>
@@ -329,20 +337,18 @@ export function DashboardPage() {
           <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
             {quickActions.map((action) => (
               <Link
-                className="group rounded-lg border border-outline-variant bg-card p-4 transition-colors hover:bg-surface-container-low"
+                className="group flex items-center gap-3 rounded-xl border border-border/60 bg-card p-4 transition-all duration-200 hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm"
                 key={action.href}
                 to={action.href}
               >
-                <div className="flex items-start gap-3">
-                  <span className="rounded-md bg-primary-fixed p-2 text-primary">
-                    <action.icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <p className="font-semibold text-on-surface">{action.title}</p>
-                    <p className="mt-1 text-sm text-on-surface-variant">
-                      {action.description}
-                    </p>
-                  </div>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                  <action.icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="font-semibold text-foreground">{action.title}</p>
+                  <p className="mt-0.5 text-sm text-muted-foreground">
+                    {action.description}
+                  </p>
                 </div>
               </Link>
             ))}
@@ -356,21 +362,21 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent>
             {!alerts.length && (
-              <div className="rounded-lg border border-dashed border-outline-variant bg-surface-container-low p-10 text-center text-on-surface-variant">
+              <div className="rounded-xl border border-dashed border-border bg-muted/50 p-10 text-center text-muted-foreground">
                 لا توجد تنبيهات حالياً.
               </div>
             )}
             <div className="grid gap-3 md:grid-cols-2">
               {alerts.map((alert) => (
                 <Link
-                  className="rounded-lg border border-outline-variant bg-card p-4 transition-colors hover:bg-surface-container-low"
+                  className="rounded-xl border border-border/60 bg-card p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-sm"
                   key={alert.title}
                   to={alert.href}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="h-5 w-5 text-warning" />
-                      <span className="font-semibold">{alert.title}</span>
+                      <span className="font-semibold text-foreground">{alert.title}</span>
                     </div>
                     <Badge
                       variant={
@@ -390,8 +396,10 @@ export function DashboardPage() {
           </CardContent>
         </Card>
       </section>
+      </PageTransition>
 
-      <section className="grid gap-4 xl:grid-cols-2">
+      <PageTransition delay={300}>
+      <section className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>حضور آخر 7 أيام</CardTitle>
@@ -453,18 +461,18 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent className="grid gap-3">
             {!recentLeaves.length && (
-              <div className="rounded-lg border border-dashed border-outline-variant bg-surface-container-low p-8 text-center text-on-surface-variant">
+              <div className="rounded-xl border border-dashed border-border bg-muted/50 p-8 text-center text-muted-foreground">
                 لا توجد طلبات إجازة بعد.
               </div>
             )}
             {recentLeaves.map((request) => (
               <div
-                className="flex flex-col justify-between gap-3 rounded-md border border-outline-variant p-4 md:flex-row md:items-center"
+                className="flex flex-col justify-between gap-3 rounded-xl border border-border/60 p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-sm md:flex-row md:items-center"
                 key={String(request.id)}
               >
                 <div>
-                  <p className="font-semibold">{displayName(request)}</p>
-                  <p className="mt-1 text-sm text-on-surface-variant">
+                  <p className="font-semibold text-foreground">{displayName(request)}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {String(request.leave_type_name ?? 'إجازة')} من{' '}
                     {String(request.start_day ?? '-')} إلى{' '}
                     {String(request.end_day ?? '-')}
@@ -484,18 +492,18 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent className="grid gap-3">
             {!recentAttendance.length && (
-              <div className="rounded-lg border border-dashed border-outline-variant bg-surface-container-low p-8 text-center text-on-surface-variant">
+              <div className="rounded-xl border border-dashed border-border bg-muted/50 p-8 text-center text-muted-foreground">
                 لا توجد سجلات حضور بعد.
               </div>
             )}
             {recentAttendance.map((record) => (
               <div
-                className="flex flex-col justify-between gap-3 rounded-md border border-outline-variant p-4 md:flex-row md:items-center"
+                className="flex flex-col justify-between gap-3 rounded-xl border border-border/60 p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-sm md:flex-row md:items-center"
                 key={String(record.id)}
               >
                 <div>
-                  <p className="font-semibold">{displayName(record)}</p>
-                  <p className="mt-1 text-sm text-on-surface-variant">
+                  <p className="font-semibold text-foreground">{displayName(record)}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {String(record.date ?? '-')} | دخول:{' '}
                     {String(record.time_in ?? '-')} | خروج:{' '}
                     {String(record.time_out ?? '-')}
@@ -509,6 +517,7 @@ export function DashboardPage() {
           </CardContent>
         </Card>
       </section>
+      </PageTransition>
     </div>
   )
 }

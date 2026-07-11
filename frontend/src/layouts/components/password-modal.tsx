@@ -60,8 +60,8 @@ export function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/45 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-xl border border-outline-variant bg-popover p-5 shadow-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-foreground/45 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-xl border border-border bg-popover p-5 shadow-lg">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-lg font-bold">تغيير كلمة المرور</p>

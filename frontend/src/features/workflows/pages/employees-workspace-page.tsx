@@ -73,11 +73,11 @@ export function EmployeesWorkspacePage() {
     <div className="space-y-6">
       <section className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <p className="text-label-md text-on-surface-variant">الموارد البشرية</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-normal text-on-surface">
+          <p className="text-label-md text-muted-foreground">الموارد البشرية</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-normal text-foreground">
             ملف الموظفين
           </h2>
-          <p className="mt-2 text-sm text-on-surface-variant">
+          <p className="mt-2 text-sm text-muted-foreground">
             واجهة مخصصة لاستعراض الموظفين وربط الوظيفة والبصمة بسرعة.
           </p>
         </div>
@@ -133,7 +133,7 @@ export function EmployeesWorkspacePage() {
           {employeesQuery.isLoading && (
             <div className="grid gap-4 xl:grid-cols-2">
               {Array.from({ length: 4 }).map((_, i) => (
-                <article key={i} className="rounded-lg border border-outline-variant bg-card p-4 shadow-sm">
+                <article key={i} className="rounded-lg border border-border bg-card p-4 shadow-sm">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-2">
                       <Skeleton className="h-6 w-32" />
@@ -153,10 +153,10 @@ export function EmployeesWorkspacePage() {
           )}
 
           {!employeesQuery.isLoading && !employees.length && (
-            <div className="rounded-lg border border-dashed border-outline-variant bg-surface-container-low p-10 text-center">
+            <div className="rounded-lg border border-dashed border-border bg-muted p-10 text-center">
               <UserRoundCheck className="mx-auto h-10 w-10 text-primary" />
               <p className="mt-3 font-semibold">لا توجد نتائج</p>
-              <p className="mt-1 text-sm text-on-surface-variant">
+              <p className="mt-1 text-sm text-muted-foreground">
                 أضف موظفين أو غيّر عبارة البحث.
               </p>
             </div>
@@ -169,7 +169,7 @@ export function EmployeesWorkspacePage() {
 
               return (
                 <article
-                  className="rounded-lg border border-outline-variant bg-card p-4 shadow-sm transition-shadow hover:shadow-soft"
+                  className="rounded-lg border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-soft"
                   key={String(employee.id)}
                 >
                   <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
@@ -182,7 +182,7 @@ export function EmployeesWorkspacePage() {
                           {employee.active ? 'نشط' : 'غير نشط'}
                         </Badge>
                       </div>
-                      <p className="mt-1 text-sm text-on-surface-variant">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         رقم الموظف: {text(employee.number_employee)}
                       </p>
                     </div>
@@ -191,7 +191,7 @@ export function EmployeesWorkspacePage() {
                     </Button>
                   </div>
 
-                  <div className="mt-4 grid gap-2 text-sm text-on-surface-variant sm:grid-cols-2">
+                  <div className="mt-4 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
                     <span className="flex items-center gap-2">
                       <Phone className="h-4 w-4 text-primary" />
                       {text(employee.phone)}

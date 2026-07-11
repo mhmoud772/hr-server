@@ -128,7 +128,7 @@ export function DashboardLayout() {
 
         {/* Top Navbar (Floating Island Design) */}
         <div className="sticky top-[88px] z-10 mx-4 mt-6 lg:mx-8">
-          <div className="flex gap-2 overflow-x-auto rounded-full border border-primary/10 bg-surface/70 p-2 shadow-sm ring-1 ring-black/5 backdrop-blur-xl no-scrollbar dark:bg-surface-variant/50 dark:ring-white/5">
+          <div className="flex gap-1.5 overflow-x-auto rounded-2xl border border-border/60 bg-card/70 p-1.5 shadow-sm backdrop-blur-xl no-scrollbar">
             {topNavItems.map((item) => {
               const Icon = item.icon
               const isActive = derivedTopNav === item.key
@@ -138,10 +138,10 @@ export function DashboardLayout() {
                   key={item.key}
                   onClick={() => navigate(item.href)}
                   className={cn(
-                    'flex shrink-0 items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold whitespace-nowrap transition-all duration-300',
+                    'flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200',
                     isActive
-                      ? 'bg-primary text-primary-foreground shadow-md ring-1 ring-primary/30'
-                      : 'bg-transparent text-muted-foreground hover:bg-surface-variant/80 hover:text-foreground',
+                      ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/25'
+                      : 'bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground',
                   )}
                 >
                   <Icon className="h-4 w-4" />

@@ -58,12 +58,12 @@ export function SlideOver({
       {/* Drawer Panel */}
       <div
         className={cn(
-          "relative z-50 flex h-full w-full max-w-md flex-col overflow-hidden border-l border-outline-variant/30 bg-surface/90 shadow-2xl backdrop-blur-2xl transition-transform dark:bg-surface-variant/90 sm:w-[400px]",
+          "relative z-50 flex h-full w-full max-w-md flex-col overflow-hidden border-l border-border/30 bg-background/90 shadow-2xl backdrop-blur-2xl transition-transform dark:bg-secondary/90 sm:w-[400px]",
           className
         )}
       >
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-outline-variant/30 px-6 py-5">
+        <div className="flex items-start justify-between border-b border-border/30 px-6 py-5">
           <div>
             <h2 className="text-lg font-bold text-foreground">{title}</h2>
             {description && (
@@ -72,7 +72,7 @@ export function SlideOver({
           </div>
           <button
             onClick={onClose}
-            className="ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-surface-container-low text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <X className="h-4 w-4" />
             <span className="sr-only">إغلاق</span>
@@ -86,7 +86,7 @@ export function SlideOver({
 
         {/* Footer (Optional) */}
         {footer && (
-          <div className="border-t border-outline-variant/30 bg-surface/50 p-6 backdrop-blur-xl dark:bg-surface-variant/50">
+          <div className="border-t border-border/30 bg-background/50 p-6 backdrop-blur-xl dark:bg-secondary/50">
             {footer}
           </div>
         )}

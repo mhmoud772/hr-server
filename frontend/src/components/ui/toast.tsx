@@ -55,7 +55,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 'flex items-start gap-3 rounded-lg border bg-card p-4 text-sm shadow-elevated',
                 toast.variant === 'success' && 'border-secondary-container',
                 toast.variant === 'error' && 'border-destructive-container',
-                toast.variant === 'info' && 'border-outline-variant',
+                toast.variant === 'info' && 'border-border',
               )}
               key={toast.id}
             >
@@ -68,8 +68,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 )}
               />
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-on-surface">{toast.title}</p>
-                <p className="mt-1 break-words text-on-surface-variant">
+                <p className="font-semibold text-foreground">{toast.title}</p>
+                <p className="mt-1 break-words text-muted-foreground">
                   {toast.message}
                 </p>
               </div>

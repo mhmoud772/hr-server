@@ -18,17 +18,17 @@ import {
 export function SystemSettingsPage() {
   return (
     <div className="space-y-10">
-      <section className="rounded-xl border border-outline-variant bg-card p-6 shadow-sm">
+      <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="flex items-start gap-3">
           <span className="rounded-xl bg-primary p-3 text-primary-foreground shadow-sm">
             <Settings className="h-6 w-6" />
           </span>
           <div>
-            <p className="text-label-md text-on-surface-variant">البيانات الأساسية</p>
-            <h2 className="mt-1 text-2xl font-bold tracking-normal text-on-surface">
+            <p className="text-label-md text-muted-foreground">البيانات الأساسية</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-normal text-foreground">
               الإعدادات والنظام
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
               إدارة الهيكل الإداري، الفترات، أجهزة البصمة، الصلاحيات، وجميع بيانات النظام الأساسية.
             </p>
           </div>
@@ -44,9 +44,9 @@ export function SystemSettingsPage() {
 
           return (
             <section key={groupKey} className="space-y-4">
-              <div className="flex items-center gap-3 border-b border-outline-variant pb-2">
+              <div className="flex items-center gap-3 border-b border-border pb-2">
                 <GroupIcon className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-bold text-on-surface">{groupTitle}</h3>
+                <h3 className="text-lg font-bold text-foreground">{groupTitle}</h3>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 {groupResources.map((resource) => (

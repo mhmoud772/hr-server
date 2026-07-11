@@ -211,19 +211,19 @@ export function ResourceForm({
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>
       {relationQueries.some((query) => query.isLoading) && (
-        <div className="rounded-lg border border-outline-variant bg-muted p-3 text-sm text-muted-foreground">
+        <div className="rounded-lg border border-border bg-muted p-3 text-sm text-muted-foreground">
           جاري تحميل خيارات الحقول المرتبطة...
         </div>
       )}
 
       {fieldGroups.map((fields, groupIndex) => (
         <section
-          className="rounded-xl border border-outline-variant bg-surface-container-lowest p-4"
+          className="rounded-xl border border-border bg-card p-4"
           key={fieldGroupTitle(groupIndex)}
         >
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <h3 className="font-bold">{fieldGroupTitle(groupIndex)}</h3>
+              <h3 className="text-sm font-bold">{fieldGroupTitle(groupIndex)}</h3>
               <p className="mt-1 text-xs text-muted-foreground">
                 {fields.length} حقول في هذا القسم
               </p>
@@ -294,7 +294,7 @@ export function ResourceForm({
                         {...register(field.key)}
                         type="checkbox"
                       />
-                      <span className="text-on-surface-variant">نعم</span>
+                      <span className="text-muted-foreground">نعم</span>
                     </div>
                   )}
 
@@ -326,7 +326,7 @@ export function ResourceForm({
         </div>
       )}
 
-      <div className="sticky bottom-0 -mx-5 flex flex-col-reverse gap-2 border-t border-outline-variant bg-card/95 px-5 py-4 backdrop-blur sm:flex-row sm:justify-end">
+      <div className="sticky bottom-0 -mx-5 flex flex-col-reverse gap-2 border-t border-border bg-card/95 px-5 py-4 backdrop-blur sm:flex-row sm:justify-end">
         <Button disabled={isSaving} onClick={onCancel} type="button" variant="outline">
           إلغاء
         </Button>

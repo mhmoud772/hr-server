@@ -72,7 +72,7 @@ export function SetupWizardPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-30 flex h-16 items-center border-b border-outline-variant/30 bg-surface/50 px-6 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 flex h-16 items-center border-b border-border/30 bg-background/50 px-6 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Rocket className="h-5 w-5" />
@@ -86,7 +86,7 @@ export function SetupWizardPage() {
         <div className="w-full max-w-3xl">
           <Stepper steps={WIZARD_STEPS} currentStep={currentStep} className="mb-12" />
 
-          <div className="rounded-3xl border border-outline-variant/30 bg-surface p-6 shadow-xl dark:bg-surface-variant/20 md:p-10">
+          <div className="rounded-3xl border border-border/30 bg-background p-6 shadow-xl dark:bg-secondary/20 md:p-10">
             
             {/* STEP 0: Welcome & Company Profile */}
             {currentStep === 0 && (
@@ -143,7 +143,7 @@ export function SetupWizardPage() {
                     <button
                       key={item.key}
                       onClick={() => setActiveResourceKey(item.key)}
-                      className="group flex flex-col items-start rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-5 text-start transition-all hover:border-primary hover:bg-primary/5 hover:shadow-md"
+                      className="group flex flex-col items-start rounded-2xl border border-border/30 bg-card p-5 text-start transition-all hover:border-primary hover:bg-primary/5 hover:shadow-md"
                     >
                       <span className="font-bold text-foreground group-hover:text-primary transition-colors">{item.title}</span>
                       <span className="mt-1 text-xs text-muted-foreground">{item.desc}</span>
@@ -170,7 +170,7 @@ export function SetupWizardPage() {
             )}
 
             {/* Navigation Buttons */}
-            <div className="mt-12 flex items-center justify-between border-t border-outline-variant/30 pt-6">
+            <div className="mt-12 flex items-center justify-between border-t border-border/30 pt-6">
               <Button
                 variant="outline"
                 onClick={handleBack}

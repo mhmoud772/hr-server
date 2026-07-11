@@ -115,7 +115,7 @@ export function RecordDetails({ onClose, open, record, title }: RecordDetailsPro
 
           return (
             <div
-              className={`flex flex-col gap-1.5 rounded-2xl border border-primary/5 bg-surface/50 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur-md transition-colors hover:bg-surface/80 dark:bg-surface-variant/30 dark:ring-white/5 ${
+              className={`flex flex-col gap-1.5 rounded-2xl border border-primary/5 bg-background/50 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur-md transition-colors hover:bg-background/80 dark:bg-secondary/30 dark:ring-white/5 ${
                 isLongValue ? 'sm:col-span-2' : ''
               }`}
               key={key}

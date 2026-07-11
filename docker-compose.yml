@@ -17,6 +17,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
 
   backend:
     restart: unless-stopped
@@ -33,14 +38,14 @@ services:
     environment:
       DJANGO_DEBUG: "False"
       DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:?Set DJANGO_SECRET_KEY before starting Docker}"
-      DJANGO_ALLOWED_HOSTS: "${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}"
-      DJANGO_CSRF_TRUSTED_ORIGINS: "${DJANGO_CSRF_TRUSTED_ORIGINS:-http://localhost,http://127.0.0.1}"
-      DJANGO_SECURE_SSL_REDIRECT: "${DJANGO_SECURE_SSL_REDIRECT:-False}"
-      DJANGO_SESSION_COOKIE_SECURE: "${DJANGO_SESSION_COOKIE_SECURE:-False}"
-      DJANGO_CSRF_COOKIE_SECURE: "${DJANGO_CSRF_COOKIE_SECURE:-False}"
-      DJANGO_SECURE_HSTS_SECONDS: "${DJANGO_SECURE_HSTS_SECONDS:-0}"
-      DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS: "${DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS:-False}"
-      DJANGO_SECURE_HSTS_PRELOAD: "${DJANGO_SECURE_HSTS_PRELOAD:-False}"
+      DJANGO_ALLOWED_HOSTS: "${DJANGO_ALLOWED_HOSTS:?Set DJANGO_ALLOWED_HOSTS before starting Docker}"
+      DJANGO_CSRF_TRUSTED_ORIGINS: "${DJANGO_CSRF_TRUSTED_ORIGINS:?Set DJANGO_CSRF_TRUSTED_ORIGINS before starting Docker}"
+      DJANGO_SECURE_SSL_REDIRECT: "${DJANGO_SECURE_SSL_REDIRECT:-True}"
+      DJANGO_SESSION_COOKIE_SECURE: "${DJANGO_SESSION_COOKIE_SECURE:-True}"
+      DJANGO_CSRF_COOKIE_SECURE: "${DJANGO_CSRF_COOKIE_SECURE:-True}"
+      DJANGO_SECURE_HSTS_SECONDS: "${DJANGO_SECURE_HSTS_SECONDS:-31536000}"
+      DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS: "${DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS:-True}"
+      DJANGO_SECURE_HSTS_PRELOAD: "${DJANGO_SECURE_HSTS_PRELOAD:-True}"
       POSTGRES_DB: "${POSTGRES_DB:-aljamieat_alwasatia}"
       POSTGRES_USER: "${POSTGRES_USER:-aljamieat}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD before starting Docker}"
@@ -49,6 +54,11 @@ services:
     command: >
       sh -c "python manage.py migrate --noinput &&
              gunicorn project.wsgi:application --bind 0.0.0.0:8000 --workers ${GUNICORN_WORKERS:-2} --timeout ${GUNICORN_TIMEOUT:-120} --max-requests ${GUNICORN_MAX_REQUESTS:-500} --max-requests-jitter ${GUNICORN_MAX_REQUESTS_JITTER:-50}"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
 
   frontend:
     restart: unless-stopped
@@ -60,9 +70,15 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     ports:
       - "${FRONTEND_PORT:-80}:80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
 volumes:
   postgres_data:

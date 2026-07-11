@@ -29,24 +29,24 @@ export function ResourceGroupPage() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-outline-variant bg-card p-6 shadow-sm">
+      <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div className="flex items-start gap-3">
             <span className="rounded-xl bg-primary p-3 text-primary-foreground shadow-sm">
               <GroupIcon className="h-6 w-6" />
             </span>
             <div>
-              <p className="text-label-md text-on-surface-variant">قسم النظام</p>
-              <h2 className="mt-1 text-2xl font-bold tracking-normal text-on-surface">
+              <p className="text-label-md text-muted-foreground">قسم النظام</p>
+              <h2 className="mt-1 text-2xl font-bold tracking-normal text-foreground">
                 {resourceGroups[typedGroupKey]}
               </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-on-surface-variant">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
                 {groupMeta.description}
               </p>
             </div>
           </div>
-          <div className="rounded-lg border border-outline-variant bg-surface-container-low p-3 text-sm text-on-surface-variant">
-            <span className="font-bold text-on-surface">{groupResources.length}</span>{' '}
+          <div className="rounded-lg border border-border bg-muted p-3 text-sm text-muted-foreground">
+            <span className="font-bold text-foreground">{groupResources.length}</span>{' '}
             صفحات متاحة
           </div>
         </div>
@@ -65,7 +65,7 @@ export function ResourceGroupPage() {
               <CardDescription>{resource.description}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Database className="h-4 w-4 text-primary" />
                 متصل بواجهة البيانات
               </div>

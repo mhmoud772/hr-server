@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { useDebounce } from '@/hooks/use-debounce'
 import { getResourceRecords } from '@/features/resources/api'
 
 function todayIso() {
@@ -21,12 +22,13 @@ function todayIso() {
 export function AttendanceWorkdayPage() {
   const [date, setDate] = useState(todayIso())
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search)
   const query = useQuery({
-    queryKey: ['workflow', 'attendance', date, search],
+    queryKey: ['workflow', 'attendance', date, debouncedSearch],
     queryFn: () =>
       getResourceRecords('/attendance/', {
         date: date || undefined,
-        search,
+        search: debouncedSearch,
       }),
   })
   const records = query.data?.records ?? []
@@ -34,8 +36,8 @@ export function AttendanceWorkdayPage() {
   return (
     <div className="space-y-6">
       <section>
-        <p className="text-label-md text-on-surface-variant">الحضور</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-normal text-on-surface">
+        <p className="text-label-md text-muted-foreground">الحضور</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-normal text-foreground">
           متابعة حضور اليوم
         </h2>
       </section>
@@ -96,14 +98,14 @@ export function AttendanceWorkdayPage() {
         </CardHeader>
         <CardContent>
           {!query.isLoading && !records.length && (
-            <div className="mb-4 rounded-lg border border-dashed border-outline-variant bg-surface-container-low p-10 text-center text-on-surface-variant">
+            <div className="mb-4 rounded-lg border border-dashed border-border bg-muted p-10 text-center text-muted-foreground">
               لا توجد سجلات حضور مطابقة للفلاتر الحالية.
             </div>
           )}
-          <div className="overflow-hidden rounded-md border border-outline-variant">
-            <div className="overflow-x-auto">
+          <div className="overflow-hidden rounded-md border border-border">
+            <div className="max-h-[520px] overflow-auto">
               <table className="w-full min-w-[720px] text-sm">
-                <thead className="bg-surface-container text-on-surface-variant">
+                <thead className="sticky top-0 z-10 bg-card text-muted-foreground shadow-sm">
                   <tr>
                     <th className="px-4 py-3 text-right">الموظف</th>
                     <th className="px-4 py-3 text-right">التاريخ</th>
@@ -112,7 +114,7 @@ export function AttendanceWorkdayPage() {
                     <th className="px-4 py-3 text-right">الحالة</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-outline-variant bg-card">
+                <tbody className="divide-y divide-border bg-card">
                   {query.isLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <tr key={i}>
@@ -129,13 +131,13 @@ export function AttendanceWorkdayPage() {
                       <td className="px-4 py-3 font-medium">
                         {String(record.employee_name ?? '-')}
                       </td>
-                      <td className="px-4 py-3 text-on-surface-variant">
+                      <td className="px-4 py-3 text-muted-foreground">
                         {String(record.date ?? '-')}
                       </td>
-                      <td className="px-4 py-3 text-on-surface-variant">
+                      <td className="px-4 py-3 text-muted-foreground">
                         {String(record.time_in ?? '-')}
                       </td>
-                      <td className="px-4 py-3 text-on-surface-variant">
+                      <td className="px-4 py-3 text-muted-foreground">
                         {String(record.time_out ?? '-')}
                       </td>
                       <td className="px-4 py-3">
@@ -148,6 +150,42 @@ export function AttendanceWorkdayPage() {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          <div className="grid gap-3 md:hidden">
+            {query.isLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div className="rounded-lg border border-border bg-card p-4" key={i}>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-3 w-16" />
+                    </div>
+                  </div>
+                ))
+              : records.map((record) => (
+                  <div className="rounded-lg border border-border bg-card p-4 shadow-sm" key={String(record.id)}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-bold">{String(record.employee_name ?? '-')}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{String(record.date ?? '-')}</p>
+                      </div>
+                      <Badge variant={record.is_present ? 'success' : 'destructive'}>
+                        {String(record.status_name ?? '-')}
+                      </Badge>
+                    </div>
+                    <div className="mt-3 space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">الدخول</span>
+                        <span>{String(record.time_in ?? '-')}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">الخروج</span>
+                        <span>{String(record.time_out ?? '-')}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
           </div>
         </CardContent>
       </Card>

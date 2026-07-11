@@ -59,11 +59,11 @@ export function ReportsPage() {
   return (
     <div className="space-y-6">
       <section>
-        <p className="text-label-md text-on-surface-variant">التقارير</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-normal text-on-surface">
+        <p className="text-label-md text-muted-foreground">التقارير</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-normal text-foreground">
           تقرير الحضور الشهري
         </h2>
-        <p className="mt-2 text-sm text-on-surface-variant">
+        <p className="mt-2 text-sm text-muted-foreground">
           تصدير CSV من سجلات الحضور التي يرجعها API للشهر المحدد.
         </p>
       </section>
@@ -88,7 +88,7 @@ export function ReportsPage() {
             <Download className="h-4 w-4" />
             تحميل CSV
           </Button>
-          <span className="text-sm text-on-surface-variant">
+          <span className="text-sm text-muted-foreground">
             {rows.length} سجل مطابق
           </span>
         </CardContent>

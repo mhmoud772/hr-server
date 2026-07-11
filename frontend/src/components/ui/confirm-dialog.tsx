@@ -24,15 +24,15 @@ export function ConfirmDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/45 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-lg border border-outline-variant bg-card p-5 shadow-elevated">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-foreground/45 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-lg border border-border bg-card p-5 shadow-elevated">
         <div className="flex items-start gap-3">
           <span className="rounded-md bg-destructive-container p-2 text-destructive-container-foreground">
             <AlertTriangle className="h-5 w-5" />
           </span>
           <div>
-            <h3 className="text-base font-semibold text-on-surface">{title}</h3>
-            <p className="mt-2 text-sm text-on-surface-variant">{description}</p>
+            <h3 className="text-base font-semibold text-foreground">{title}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{description}</p>
           </div>
         </div>
 

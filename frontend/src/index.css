@@ -1,124 +1,146 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: 210 33% 97%;
-    --foreground: 222 28% 16%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 28% 16%;
-    --popover: 210 40% 98%;
-    --popover-foreground: 222 28% 16%;
-    --primary: 186 74% 36%;
-    --primary-foreground: 204 100% 97%;
-    --secondary: 220 16% 28%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 210 22% 90%;
-    --muted-foreground: 215 16% 40%;
-    --accent: 35 95% 92%;
-    --accent-foreground: 24 35% 25%;
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 85% 97%;
-    --success: 142 72% 38%;
-    --success-foreground: 0 0% 100%;
-    --warning: 35 92% 45%;
-    --warning-foreground: 0 0% 100%;
-    --info: 199 89% 48%;
-    --info-foreground: 0 0% 100%;
-    --border: 214 26% 84%;
-    --input: 214 30% 88%;
-    --ring: 186 74% 45%;
-    --radius: 0.5rem;
+@theme {
+  --font-sans: 'Cairo', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
-    --font-sans: 'Cairo', 'Manrope', ui-sans-serif, system-ui, -apple-system,
-      BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-      'Liberation Mono', 'Courier New', monospace;
+  --color-background: #f0f4f8;
+  --color-foreground: #1a2332;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a2332;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1a2332;
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #334155;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+  --color-accent: #f1f5f9;
+  --color-accent-foreground: #1a2332;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #22c55e;
+  --color-success-foreground: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #ffffff;
+  --color-info: #3b82f6;
+  --color-info-foreground: #ffffff;
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --color-ring: #2563eb;
 
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1),
-      0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1),
-      0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1),
-      0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1),
-      0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1),
-      0 8px 10px -1px hsl(0 0% 0% / 0.1);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+
+  --shadow-sm: 0 1px 2px 0px rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0px rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.06);
+
+  --color-primary-fixed: color-mix(in oklch, var(--color-primary) 14%, transparent);
+  --color-primary-fixed-foreground: var(--color-primary);
+  --color-secondary-container: color-mix(in oklch, var(--color-secondary) 14%, transparent);
+  --color-secondary-container-foreground: var(--color-secondary);
+  --color-destructive-container: color-mix(in oklch, var(--color-destructive) 12%, transparent);
+  --color-destructive-container-foreground: var(--color-destructive);
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  direction: rtl;
+}
+
+.dark {
+  --color-background: #0f172a;
+  --color-foreground: #f1f5f9;
+  --color-card: #1e293b;
+  --color-card-foreground: #f1f5f9;
+  --color-popover: #1e293b;
+  --color-popover-foreground: #f1f5f9;
+  --color-primary: #3b82f6;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #cbd5e1;
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+  --color-accent: #1e293b;
+  --color-accent-foreground: #f1f5f9;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #22c55e;
+  --color-success-foreground: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #ffffff;
+  --color-info: #3b82f6;
+  --color-info-foreground: #ffffff;
+  --color-border: #334155;
+  --color-input: #334155;
+  --color-ring: #3b82f6;
+
+  --color-primary-fixed: color-mix(in oklch, var(--color-primary) 20%, transparent);
+  --color-primary-fixed-foreground: var(--color-primary);
+  --color-secondary-container: color-mix(in oklch, var(--color-secondary) 20%, transparent);
+  --color-secondary-container-foreground: var(--color-secondary);
+  --color-destructive-container: color-mix(in oklch, var(--color-destructive) 15%, transparent);
+  --color-destructive-container-foreground: var(--color-destructive);
+
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
+}
 
-  .dark {
-    --background: 222 34% 10%;
-    --foreground: 210 40% 96%;
-    --card: 222 28% 14%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 28% 14%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 186 74% 50%;
-    --primary-foreground: 222 28% 10%;
-    --secondary: 215 20% 28%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 215 16% 26%;
-    --muted-foreground: 215 20% 70%;
-    --accent: 215 20% 20%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 0 70% 52%;
-    --destructive-foreground: 0 85% 97%;
-    --success: 142 70% 48%;
-    --success-foreground: 0 0% 100%;
-    --warning: 35 92% 50%;
-    --warning-foreground: 0 0% 100%;
-    --info: 199 89% 55%;
-    --info-foreground: 0 0% 100%;
-    --border: 215 20% 24%;
-    --input: 215 20% 24%;
-    --ring: 186 74% 50%;
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
-
-  * {
-    @apply border-border;
-  }
-
-  html {
-    direction: rtl;
-  }
-
-  body {
-    @apply bg-background text-body-base text-foreground antialiased;
-    min-width: 320px;
-    min-height: 100vh;
-    margin: 0;
-    font-family: var(--font-sans);
-  }
-
-  h1 {
-    @apply text-h1 font-bold;
-  }
-
-  h2 {
-    @apply text-h2 font-bold;
-  }
-
-  h3 {
-    @apply text-h3 font-semibold;
-  }
-
-  h4 {
-    @apply text-h4 font-semibold;
-  }
-
-  button,
-  input,
-  textarea,
-  select {
-    font: inherit;
-  }
-
-  #root {
-    min-height: 100vh;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

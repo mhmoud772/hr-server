@@ -1,17 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0F766E"/>
-      <stop offset="1" stop-color="#2563EB"/>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
     </linearGradient>
   </defs>
-  <rect width="128" height="128" rx="24" fill="url(#g)"/>
-  <g fill="#fff">
-    <rect x="26" y="35" width="12" height="59" rx="6"/>
-    <rect x="49" y="35" width="12" height="59" rx="6"/>
-    <rect x="26" y="60" width="35" height="12" rx="6"/>
-    <rect x="76" y="35" width="12" height="59" rx="6"/>
-    <rect x="82" y="35" width="26" height="28" rx="14"/>
-  </g>
-  <line x1="84" y1="68" x2="106" y2="93" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+  
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="62" fill="url(#grad)"/>
+  
+  <!-- Left person -->
+  <circle cx="46" cy="44" r="10" fill="#fff" opacity="0.95"/>
+  <path d="M33 70 Q33 58 46 58 Q59 58 59 70 L59 76 Q59 78 57 78 L35 78 Q33 78 33 76 Z" fill="#fff" opacity="0.95"/>
+  
+  <!-- Right person -->
+  <circle cx="82" cy="44" r="10" fill="#fff" opacity="0.95"/>
+  <path d="M69 70 Q69 58 82 58 Q95 58 95 70 L95 76 Q95 78 93 78 L71 78 Q69 78 69 76 Z" fill="#fff" opacity="0.95"/>
+  
+  <!-- Connection arc -->
+  <path d="M46 68 Q64 84 82 68" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+  
+  <!-- Heart/community symbol -->
+  <path d="M64 90 L60 86 Q53 79 53 74 Q53 70 57 70 Q61 70 64 74 Q67 70 71 70 Q75 70 75 74 Q75 79 68 86 Z" fill="#fff" opacity="0.85"/>
 </svg>

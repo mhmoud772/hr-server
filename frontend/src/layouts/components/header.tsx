@@ -177,12 +177,12 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
 
   return (
     <header
-      className="sticky top-4 z-20 mx-4 flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-outline-variant/30 bg-background/80 px-4 shadow-sm backdrop-blur-xl lg:mx-8 lg:px-6"
+      className="sticky top-4 z-20 mx-4 flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-border/60 bg-card/80 px-4 shadow-sm backdrop-blur-xl lg:mx-8 lg:px-6"
       ref={menuRef}
     >
       <div className="flex w-full items-center justify-between lg:hidden">
         <Button
-          className="shrink-0 text-muted-foreground hover:text-foreground"
+          className="shrink-0 text-muted-foreground hover:text-foreground h-11 w-11"
           onClick={toggleSidebar}
           size="icon"
           type="button"
@@ -194,7 +194,7 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
         <div className="min-w-0 flex-1 px-4 text-center">
           <h2 className="truncate text-base font-bold">{pageTitle}</h2>
         </div>
-        <div className="w-9 shrink-0" />
+        <div className="w-11 shrink-0" />
       </div>
 
       <div className="hidden flex-1 flex-col justify-center lg:flex">
@@ -207,7 +207,7 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
         <h2 className="truncate text-sm font-bold text-foreground">{pageTitle}</h2>
       </div>
 
-      <div className="relative hidden max-w-2xl flex-[2] items-center rounded-xl border border-outline-variant/50 bg-surface-variant/30 px-2 transition-colors focus-within:border-primary/50 focus-within:bg-surface-variant/50 focus-within:shadow-sm md:flex">
+      <div className="relative hidden max-w-2xl flex-[2] items-center rounded-xl border border-border/60 bg-muted/50 px-2 transition-all duration-200 focus-within:border-primary/50 focus-within:bg-muted focus-within:shadow-sm md:flex">
         <Search className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
         <Input
           className="h-12 w-full border-0 bg-transparent pl-20 pr-12 text-base shadow-none focus-visible:ring-0"
@@ -223,11 +223,11 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
           value={searchTerm}
           type="search"
         />
-        <kbd className="pointer-events-none absolute left-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-outline-variant bg-background px-2 py-1 text-[10px] font-semibold text-muted-foreground shadow-sm xl:inline-flex">
+        <kbd className="pointer-events-none absolute left-3 top-1/2 hidden -translate-y-1/2 rounded-lg border border-border bg-card px-2 py-1 text-[10px] font-semibold text-muted-foreground shadow-sm xl:inline-flex">
           ⌘ K
         </kbd>
         {searchTerm.trim().length >= 2 && (
-          <div className="absolute left-0 right-0 top-12 z-30 overflow-hidden rounded-lg border border-outline-variant bg-popover shadow-lg">
+          <div className="absolute left-0 right-0 top-12 z-30 overflow-hidden rounded-2xl border border-border/60 bg-card shadow-lg">
             {isSearching && (
               <div className="p-4 space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -248,7 +248,7 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
             )}
             {searchResults.map((item) => (
               <button
-                className="block w-full border-b border-outline-variant px-4 py-3 text-right transition-colors last:border-0 hover:bg-muted"
+                className="block w-full border-b border-border/60 px-4 py-3 text-right transition-colors last:border-0 hover:bg-muted"
                 key={`${item.href}-${item.title}-${item.subtitle}`}
                 onClick={() => {
                   navigate(item.href)
@@ -274,25 +274,25 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
       <div className="hidden flex-1 items-center justify-end gap-1 md:flex">
         <div className="relative">
           <Button
-            className="relative rounded-full text-muted-foreground hover:text-foreground"
+            className="relative rounded-xl text-muted-foreground hover:text-foreground"
             onClick={() => setActiveMenu((menu) => (menu === 'notifications' ? null : 'notifications'))}
             size="icon"
             title="الإشعارات"
             type="button"
-            variant="outline"
+            variant="ghost"
           >
             <Bell className="h-5 w-5" />
             {notificationCount > 0 && (
-              <span className="absolute -left-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground">
+              <span className="absolute -left-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground shadow-sm">
                 {notificationCount > 99 ? '99+' : notificationCount}
               </span>
             )}
             <span className="sr-only">الإشعارات</span>
           </Button>
           {activeMenu === 'notifications' && (
-            <div className="absolute left-0 top-12 z-30 w-80 overflow-hidden rounded-lg border border-outline-variant bg-popover shadow-lg">
-              <div className="border-b border-outline-variant p-4">
-                <p className="font-bold">الإشعارات</p>
+            <div className="absolute left-0 top-12 z-30 w-80 overflow-hidden rounded-2xl border border-border/60 bg-card shadow-lg">
+              <div className="border-b border-border/60 p-4">
+                <p className="font-bold text-foreground">الإشعارات</p>
                 <p className="mt-1 text-xs text-muted-foreground">أهم التنبيهات المرتبطة ببيانات النظام.</p>
               </div>
               <div className="p-2">
@@ -318,9 +318,9 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
                     .map((item) => (
                       <button
                         className={cn(
-                          'flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 text-right transition-colors hover:bg-muted',
+                          'flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-right transition-colors hover:bg-muted',
                           item.variant === 'destructive' && 'bg-destructive/5',
-                          item.variant === 'warning' && 'bg-warning/10',
+                          item.variant === 'warning' && 'bg-warning/5',
                         )}
                         key={item.title}
                         onClick={() => {
@@ -343,29 +343,29 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
 
         <div className="relative">
           <Button
-            className="rounded-full text-muted-foreground hover:text-foreground"
+            className="rounded-xl text-muted-foreground hover:text-foreground"
             onClick={() => setActiveMenu((menu) => (menu === 'more' ? null : 'more'))}
             size="icon"
             title="المزيد"
             type="button"
-            variant="outline"
+            variant="ghost"
           >
             <MoreHorizontal className="h-5 w-5" />
             <span className="sr-only">المزيد</span>
           </Button>
           {activeMenu === 'more' && (
-            <div className="absolute left-0 top-12 z-30 w-72 overflow-hidden rounded-lg border border-outline-variant bg-popover p-2 shadow-lg">
-              <div className="border-b border-outline-variant px-3 py-3">
+            <div className="absolute left-0 top-12 z-30 w-72 overflow-hidden rounded-2xl border border-border/60 bg-card p-2 shadow-lg">
+              <div className="border-b border-border/60 px-3 py-3">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock3 className="h-4 w-4 text-primary" />
                   {formatToday()}
                 </div>
                 <div
                   className={cn(
-                    'mt-3 flex items-center gap-2 rounded-md border px-3 py-2 text-sm',
+                    'mt-3 flex items-center gap-2 rounded-lg border px-3 py-2 text-sm',
                     apiHasError
                       ? 'border-destructive/30 bg-destructive/10 text-destructive'
-                      : 'border-outline-variant bg-surface-container-low text-on-surface-variant',
+                      : 'border-border/60 bg-muted text-muted-foreground',
                   )}
                 >
                   {apiHasError ? <WifiOff className="h-4 w-4" /> : <Wifi className="h-4 w-4 text-success" />}
@@ -389,11 +389,11 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
 
         <div className="relative">
           <button
-            className="group flex items-center gap-2 rounded-full p-1 text-sm font-semibold transition-colors hover:bg-muted xl:pl-3 xl:pr-1"
+            className="group flex items-center gap-2 rounded-xl p-1 text-sm font-semibold transition-colors hover:bg-muted xl:pl-3 xl:pr-1"
             onClick={() => setActiveMenu((menu) => (menu === 'user' ? null : 'user'))}
             type="button"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground transition-transform group-hover:scale-105">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground transition-transform group-hover:scale-105">
               {(username ?? 'م').slice(0, 1).toUpperCase()}
             </span>
             <span className="hidden max-w-24 truncate text-muted-foreground transition-colors group-hover:text-foreground xl:inline">
@@ -402,9 +402,9 @@ export function Header({ onOpenPasswordModal }: HeaderProps) {
             <ChevronDown className="hidden h-4 w-4 text-muted-foreground xl:block" />
           </button>
           {activeMenu === 'user' && (
-            <div className="absolute left-0 top-12 z-30 w-56 overflow-hidden rounded-lg border border-outline-variant bg-popover p-2 shadow-lg">
-              <div className="border-b border-outline-variant px-3 py-3">
-                <p className="text-sm font-bold">{username ?? 'مستخدم النظام'}</p>
+            <div className="absolute left-0 top-12 z-30 w-56 overflow-hidden rounded-2xl border border-border/60 bg-card p-2 shadow-lg">
+              <div className="border-b border-border/60 px-3 py-3">
+                <p className="text-sm font-bold text-foreground">{username ?? 'مستخدم النظام'}</p>
                 <p className="mt-1 text-xs text-muted-foreground">جلسة محلية</p>
               </div>
               <button
