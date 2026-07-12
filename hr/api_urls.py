@@ -21,6 +21,7 @@ from .api_views import (
     change_password,
     system_status,
     global_search,
+    org_tree,
 )
 
 router = DefaultRouter()
@@ -46,4 +47,5 @@ urlpatterns = [
     path('change-password/', change_password, name='change_password'),
     path('system-status/', system_status, name='system_status'),
     path('global-search/', global_search, name='global_search'),
+    path('org-tree/', org_tree, name='org_tree'),
 ]

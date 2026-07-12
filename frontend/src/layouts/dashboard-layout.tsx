@@ -1,6 +1,6 @@
 import { useMemo, useState, type ElementType } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { CalendarCheck, ClipboardCheck, FileSpreadsheet, Home, Users, Settings } from 'lucide-react'
+import { CalendarCheck, ClipboardCheck, FileSpreadsheet, Home, Users, Settings, Network } from 'lucide-react'
 
 import { resourceGroupMeta, resourceGroups, resources } from '@/features/resources/resource-config'
 import { cn } from '@/lib/utils'
@@ -20,6 +20,11 @@ const workflowLinks = [
     title: 'ملف الموظفين',
     href: '/workflows/employees',
     icon: Users,
+  },
+  {
+    title: 'الهيكل التنظيمي',
+    href: '/org-chart',
+    icon: Network,
   },
   {
     title: 'اعتماد الإجازات',

@@ -12,6 +12,7 @@ import { FingerprintIntegrationPage } from '@/features/workflows/pages/fingerpri
 import { LeaveApprovalsPage } from '@/features/workflows/pages/leave-approvals-page'
 import { ReportsPage } from '@/features/workflows/pages/reports-page'
 import { SystemSettingsPage } from '@/features/settings/pages/system-settings-page'
+import { OrgChartPage } from '@/features/org-chart/pages/org-chart-page'
 export const router = createBrowserRouter([
   {
     path: '/login',
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
           {
             path: 'workflows/fingerprint-integration',
             element: <FingerprintIntegrationPage />,
+          },
+          {
+            path: 'org-chart',
+            element: <OrgChartPage />,
           },
           {
             path: 'settings',

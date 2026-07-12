@@ -64,6 +64,37 @@ class OrganizationalStructureViewSet(BaseModelViewSet):
     search_fields = ('name', 'descriptions')
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def org_tree(request):
+    """
+    Returns the full organizational structure as a nested tree.
+    Each node includes employee count for that structure.
+    """
+    from django.db.models import Count
+
+    structures = OrganizationalStructure.objects.annotate(
+        employee_count=Count('job__employee', distinct=True)
+    ).get_descendants(include_self=True)
+
+    def build_node(structure):
+        children = structure.get_children()
+        return {
+            'id': structure.pk,
+            'name': structure.name,
+            'description': structure.descriptions,
+            'employeeCount': structure.employee_count,
+            'children': [build_node(child) for child in children],
+        }
+
+    roots = OrganizationalStructure.objects.filter(parent__isnull=True).annotate(
+        employee_count=Count('job__employee', distinct=True)
+    )
+    tree = [build_node(root) for root in roots]
+
+    return Response(tree)
+
+
 class JobTitleViewSet(BaseModelViewSet):
     queryset = JobTitle.objects.all()
     serializer_class = JobTitleSerializer
