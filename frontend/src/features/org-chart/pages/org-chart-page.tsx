@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import {
   ReactFlow,
   Background,
@@ -12,13 +12,12 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { useQuery } from '@tanstack/react-query'
-import { Network, RefreshCw, AlertCircle, Building2, Users, Layers } from 'lucide-react'
+import { RefreshCw, AlertCircle, Building2, Users, Layers } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PageTransition } from '@/components/ui/page-transition'
-import { cn } from '@/lib/utils'
 import { fetchOrgTree } from '../api'
 import type { OrgTreeNode } from '../types'
 import { OrgTreeNode as OrgTreeNodeComponent } from '../components/org-tree-node'

@@ -1,4 +1,4 @@
-import { Handle, Position, type NodeProps } from '@xyflow/react'
+import { Handle, type NodeProps } from '@xyflow/react'
 import { Building2, Users } from 'lucide-react'
 
 type OrgNodeData = {
