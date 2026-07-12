@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.db.models import Count
 from rest_framework import filters, viewsets
-from rest_framework.permissions import IsAdminUser
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
 
 from .models import (
     Attendance,
@@ -71,8 +74,6 @@ def org_tree(request):
     Returns the full organizational structure as a nested tree.
     Each node includes employee count for that structure.
     """
-    from django.db.models import Count
-
     structures = OrganizationalStructure.objects.annotate(
         employee_count=Count('job__employee', distinct=True)
     ).get_descendants(include_self=True)
@@ -205,9 +206,6 @@ class GroupViewSet(BaseModelViewSet):
 
 
 from django.contrib.auth.hashers import check_password
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 
 @api_view(['POST'])
@@ -246,9 +244,6 @@ def change_password(request):
 
     return Response({'detail': 'تم تغيير كلمة المرور بنجاح'})
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
