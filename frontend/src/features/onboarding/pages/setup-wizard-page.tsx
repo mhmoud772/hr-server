@@ -26,9 +26,14 @@ export function SetupWizardPage() {
   const [currentStep, setCurrentStep] = useState(0)
   const [isCompleting, setIsCompleting] = useState(false)
 
+  // Company form state
+  const [companyName, setCompanyName] = useState('جامعة الوسطية')
+  const [companyEmail, setCompanyEmail] = useState('admin@example.com')
+  const [currency, setCurrency] = useState('YER')
+
   // Form states for SlideOver
   const [activeResourceKey, setActiveResourceKey] = useState<string | null>(null)
-  
+
   const activeResource = activeResourceKey ? getResourceByKey(activeResourceKey) : null
 
   const handleNext = () => {
@@ -46,12 +51,7 @@ export function SetupWizardPage() {
   const handleComplete = async () => {
     setIsCompleting(true)
     try {
-      await completeSetup({
-        company_name: 'جامعة الوسطية',
-        company_email: 'admin@example.com',
-        currency: 'YER',
-      })
-      localStorage.setItem('setup_completed', 'true')
+      await completeSetup({ company_name: companyName, company_email: companyEmail, currency })
       navigate('/')
     } catch {
       setIsCompleting(false)
@@ -120,18 +120,31 @@ export function SetupWizardPage() {
                 <div className="space-y-5">
                   <label className="block space-y-2 text-sm font-medium">
                     <span>اسم المنشأة / الشركة</span>
-                    <Input placeholder="مثال: شركة التقنية الحديثة" defaultValue="جامعة الوسطية" />
+                    <Input
+                      placeholder="مثال: شركة التقنية الحديثة"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                    />
                   </label>
                   <label className="block space-y-2 text-sm font-medium">
                     <span>البريد الإلكتروني الرسمي</span>
-                    <Input type="email" placeholder="info@company.com" defaultValue="admin@example.com" />
+                    <Input
+                      type="email"
+                      placeholder="info@company.com"
+                      value={companyEmail}
+                      onChange={(e) => setCompanyEmail(e.target.value)}
+                    />
                   </label>
                   <label className="block space-y-2 text-sm font-medium">
                     <span>العملة الافتراضية</span>
-                    <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                      <option>ريال يمني (YER)</option>
-                      <option>ريال سعودي (SAR)</option>
-                      <option>دولار أمريكي (USD)</option>
+                    <select
+                      value={currency}
+                      onChange={(e) => setCurrency(e.target.value)}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <option value="YER">ريال يمني (YER)</option>
+                      <option value="SAR">ريال سعودي (SAR)</option>
+                      <option value="USD">دولار أمريكي (USD)</option>
                     </select>
                   </label>
                 </div>

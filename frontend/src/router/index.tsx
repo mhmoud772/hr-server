@@ -23,6 +23,10 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
+        path: 'onboarding/setup',
+        element: <SetupWizardPage />,
+      },
+      {
         path: '/',
         element: <DashboardLayout />,
         children: [
@@ -69,10 +73,6 @@ export const router = createBrowserRouter([
           {
             path: 'org-chart',
             element: <OrgChartPage />,
-          },
-          {
-            path: 'onboarding/setup',
-            element: <SetupWizardPage />,
           },
           {
             path: 'settings',
