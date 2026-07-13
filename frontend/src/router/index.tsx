@@ -13,6 +13,7 @@ import { LeaveApprovalsPage } from '@/features/workflows/pages/leave-approvals-p
 import { ReportsPage } from '@/features/workflows/pages/reports-page'
 import { SystemSettingsPage } from '@/features/settings/pages/system-settings-page'
 import { OrgChartPage } from '@/features/org-chart/pages/org-chart-page'
+import { SetupWizardPage } from '@/features/onboarding/pages/setup-wizard-page'
 export const router = createBrowserRouter([
   {
     path: '/login',
@@ -68,6 +69,10 @@ export const router = createBrowserRouter([
           {
             path: 'org-chart',
             element: <OrgChartPage />,
+          },
+          {
+            path: 'onboarding/setup',
+            element: <SetupWizardPage />,
           },
           {
             path: 'settings',

@@ -1,12 +1,47 @@
+# ── Version Control ──────────────────────────────────────────────
 .git
+.github
+.gitignore
+
+# ── Python ───────────────────────────────────────────────────────
 .venv
+venv/
 __pycache__
 *.pyc
-*.pem
+*.pyo
+*.egg-info
+.pytest_cache
+.mypy_cache
+
+# ── Environment & Secrets ────────────────────────────────────────
 .env
+.env.*
+*.pem
+*.key
+
+# ── Database ─────────────────────────────────────────────────────
 db.sqlite3
-frontend/node_modules
-frontend/dist
-frontend/.env
-media
-staticfiles
+db.sqlite3-journal
+
+# ── Build Artifacts ──────────────────────────────────────────────
+build/
+dist/
+staticfiles/
+media/
+
+# ── Frontend (not needed in backend image) ───────────────────────
+frontend/
+node_modules/
+
+# ── IDE & OS ─────────────────────────────────────────────────────
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Documentation ────────────────────────────────────────────────
+*.md
+LICENSE
+AGENTS.md

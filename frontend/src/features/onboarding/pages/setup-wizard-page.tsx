@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Building2, CheckCircle2, Rocket, ArrowRight, ArrowLeft } from 'lucide-react'
+import { Building2, CheckCircle2, Rocket, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,7 @@ import { SlideOver } from '@/components/ui/slide-over'
 import { useMutation } from '@tanstack/react-query'
 import { createResourceRecord } from '@/features/resources/api'
 import { useToast } from '@/components/ui/toast'
+import { completeSetup } from '@/features/core/api'
 
 const WIZARD_STEPS = [
   { title: 'الترحيب', description: 'بيانات المنشأة الأساسية' },
@@ -23,6 +24,7 @@ export function SetupWizardPage() {
   const navigate = useNavigate()
   const { notify } = useToast()
   const [currentStep, setCurrentStep] = useState(0)
+  const [isCompleting, setIsCompleting] = useState(false)
 
   // Form states for SlideOver
   const [activeResourceKey, setActiveResourceKey] = useState<string | null>(null)
@@ -41,10 +43,24 @@ export function SetupWizardPage() {
     }
   }
 
-  const handleComplete = () => {
-    // Mark setup as completed in localStorage (or call backend API)
-    localStorage.setItem('setup_completed', 'true')
-    navigate('/')
+  const handleComplete = async () => {
+    setIsCompleting(true)
+    try {
+      await completeSetup({
+        company_name: 'جامعة الوسطية',
+        company_email: 'admin@example.com',
+        currency: 'YER',
+      })
+      localStorage.setItem('setup_completed', 'true')
+      navigate('/')
+    } catch {
+      setIsCompleting(false)
+      notify({
+        title: 'خطأ',
+        message: 'حدث خطأ أثناء إكمال التهيئة. حاول مرة أخرى.',
+        variant: 'error',
+      })
+    }
   }
 
   const saveMutation = useMutation({
@@ -185,8 +201,18 @@ export function SetupWizardPage() {
                   التالي <ArrowLeft className="h-4 w-4" />
                 </Button>
               ) : (
-                <Button onClick={handleComplete} className="gap-2 px-8 bg-success hover:bg-success/90 text-success-foreground">
-                  بدء الاستخدام <Rocket className="h-4 w-4" />
+                <Button
+                  onClick={handleComplete}
+                  disabled={isCompleting}
+                  className="gap-2 px-8 bg-success hover:bg-success/90 text-success-foreground"
+                >
+                  {isCompleting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> جارٍ الحفظ...
+                    </>
+                  ) : (
+                    <>بدء الاستخدام <Rocket className="h-4 w-4" /></>
+                  )}
                 </Button>
               )}
             </div>

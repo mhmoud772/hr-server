@@ -20,6 +20,7 @@ from .models import (
     MaritalStatus,
     OrganizationalStructure,
     Shift,
+    SystemConfig,
     TypeOfEmployee,
 )
 from .serializers import (
@@ -250,11 +251,29 @@ def change_password(request):
 def system_status(request):
     """
     Returns system status, specifically whether basic setup is completed.
-    Setup is considered completed if there is at least one Employee or OrganizationalStructure.
+    Setup is completed only after the setup wizard is finished (SystemConfig.setup_completed = True).
     """
-    is_setup_completed = Employee.objects.exists() or OrganizationalStructure.objects.exists()
+    config = SystemConfig.get_config()
     return Response({
-        "setup_completed": is_setup_completed
+        "setup_completed": config.setup_completed
+    })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def complete_setup(request):
+    """
+    Marks system setup as completed. Called by the setup wizard on finish.
+    """
+    config = SystemConfig.get_config()
+    config.setup_completed = True
+    config.company_name = request.data.get('company_name', config.company_name) or ''
+    config.company_email = request.data.get('company_email', config.company_email) or ''
+    config.currency = request.data.get('currency', config.currency) or 'YER'
+    config.save()
+    return Response({
+        "detail": "تم اكتمال تهيئة النظام",
+        "setup_completed": True
     })
 
 from django.db.models import Q

@@ -22,6 +22,7 @@ from .api_views import (
     system_status,
     global_search,
     org_tree,
+    complete_setup,
 )
 
 router = DefaultRouter()
@@ -48,4 +49,5 @@ urlpatterns = [
     path('system-status/', system_status, name='system_status'),
     path('global-search/', global_search, name='global_search'),
     path('org-tree/', org_tree, name='org_tree'),
+    path('complete-setup/', complete_setup, name='complete_setup'),
 ]

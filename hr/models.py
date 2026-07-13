@@ -286,3 +286,24 @@ class LawFingerPrinter(models.Model):
 
     def get_absolute_url(self):
         return reverse("LawFingerPrinter_detail", kwargs={"pk": self.pk})
+
+
+class SystemConfig(models.Model):
+    setup_completed = models.BooleanField(_("اكتملت التهيئة"), default=False)
+    company_name = models.CharField(_("اسم المنشأة"), max_length=100, blank=True)
+    company_email = models.EmailField(_("البريد الإلكتروني"), blank=True)
+    currency = models.CharField(_("العملة"), max_length=10, default='YER')
+    created_at = models.DateTimeField(_("تاريخ الإنشاء"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("تاريخ التعديل"), auto_now=True)
+
+    class Meta:
+        verbose_name = _("إعدادات النظام")
+        verbose_name_plural = _("إعدادات النظام")
+
+    def __str__(self):
+        return self.company_name or 'إعدادات النظام'
+
+    @classmethod
+    def get_config(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
