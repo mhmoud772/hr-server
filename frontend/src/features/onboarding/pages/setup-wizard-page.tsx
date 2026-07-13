@@ -9,7 +9,7 @@ import { getResourceByKey } from '@/features/resources/resource-config'
 
 import { ResourceForm } from '@/features/resources/components/resource-form'
 import { SlideOver } from '@/components/ui/slide-over'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createResourceRecord } from '@/features/resources/api'
 import { useToast } from '@/components/ui/toast'
 import { completeSetup } from '@/features/core/api'
@@ -23,6 +23,7 @@ const WIZARD_STEPS = [
 export function SetupWizardPage() {
   const navigate = useNavigate()
   const { notify } = useToast()
+  const queryClient = useQueryClient()
   const [currentStep, setCurrentStep] = useState(0)
   const [isCompleting, setIsCompleting] = useState(false)
 
@@ -52,6 +53,7 @@ export function SetupWizardPage() {
     setIsCompleting(true)
     try {
       await completeSetup({ company_name: companyName, company_email: companyEmail, currency })
+      await queryClient.invalidateQueries({ queryKey: ['system-status'] })
       navigate('/')
     } catch {
       setIsCompleting(false)
