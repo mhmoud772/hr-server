@@ -53,7 +53,7 @@ export function SetupWizardPage() {
     setIsCompleting(true)
     try {
       await completeSetup({ company_name: companyName, company_email: companyEmail, currency })
-      await queryClient.invalidateQueries({ queryKey: ['system-status'] })
+      queryClient.setQueryData(['system-status'], { setup_completed: true })
       navigate('/')
     } catch {
       setIsCompleting(false)
